@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(248, 22%, 97%);
+  --foreground: hsl(240, 21%, 15%);
+  --muted: hsl(240, 5%, 96%);
+  --muted-foreground: hsl(240, 4%, 46%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(240, 21%, 15%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(240, 21%, 15%);
+  --border: hsl(240, 5%, 91%);
+  --input: hsl(240, 5%, 91%);
+  --primary: hsl(262, 83%, 58%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(240, 5%, 96%);
+  --secondary-foreground: hsl(240, 6%, 10%);
+  --accent: hsl(240, 5%, 96%);
+  --accent-foreground: hsl(240, 6%, 10%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(60, 9%, 98%);
+  --ring: hsl(262, 83%, 58%);
+  --radius: 0.5rem;
+  
+  /* Mystical color palette */
+  --mystic-purple: hsl(262, 83%, 58%);
+  --mystic-blue: hsl(214, 84%, 56%);
+  --mystic-gold: hsl(45, 93%, 47%);
+  --mystic-50: hsl(248, 22%, 97%);
+  --mystic-100: hsl(246, 16%, 93%);
+  --mystic-200: hsl(243, 13%, 86%);
+  --mystic-300: hsl(241, 11%, 79%);
+  --mystic-400: hsl(240, 9%, 60%);
+  --mystic-500: hsl(240, 7%, 46%);
+  --mystic-600: hsl(240, 10%, 38%);
+  --mystic-700: hsl(240, 13%, 30%);
+  --mystic-800: hsl(240, 21%, 15%);
+  --mystic-900: hsl(240, 39%, 9%);
+}
+
+.dark {
+  --background: hsl(240, 39%, 9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 21%, 15%);
+  --muted-foreground: hsl(240, 5%, 65%);
+  --popover: hsl(240, 39%, 9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 21%, 15%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 21%, 15%);
+  --input: hsl(240, 21%, 15%);
+  --primary: hsl(262, 83%, 58%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(240, 21%, 15%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 21%, 15%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(262, 83%, 58%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+  
+  .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  .mystical-gradient {
+    background: linear-gradient(135deg, var(--mystic-purple) 0%, var(--mystic-blue) 50%, var(--mystic-900) 100%);
+  }
+  
+  .dark .mystical-gradient {
+    background: linear-gradient(135deg, hsl(240, 21%, 15%) 0%, hsl(240, 39%, 9%) 50%, hsl(0, 0%, 0%) 100%);
+  }
+  
+  .floating-orb {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .mystical-border {
+    background: linear-gradient(45deg, var(--mystic-purple), var(--mystic-gold), var(--mystic-blue), var(--mystic-purple));
+    background-size: 300% 300%;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  @keyframes float {
+    0%, 100% { 
+      transform: translateY(0px); 
+    }
+    50% { 
+      transform: translateY(-20px); 
+    }
+  }
+  
+  @keyframes glow {
+    0% { 
+      box-shadow: 0 0 5px var(--mystic-purple); 
+    }
+    100% { 
+      box-shadow: 0 0 20px var(--mystic-purple), 0 0 30px var(--mystic-purple); 
+    }
+  }
+  
+  @keyframes shimmer {
+    0% { 
+      background-position: -1000px 0; 
+    }
+    100% { 
+      background-position: 1000px 0; 
+    }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+  }
+}
