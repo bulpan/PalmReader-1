@@ -1,6 +1,8 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import fs from "fs";
+import path from "path";
 
 const app = express();
 app.use(express.json());
@@ -47,18 +49,26 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  const isProduction = process.env.NODE_ENV === "production";
-  log(`Environment: ${process.env.NODE_ENV || 'not set'}, isProduction: ${isProduction}`);
+  // Check if we're in deployment environment by looking for built files
+  const distPath = path.resolve(import.meta.dirname, "..", "dist", "public");
+  const isDeployment = fs.existsSync(distPath) && fs.existsSync(path.join(distPath, "index.html"));
+  const hasViteSource = fs.existsSync(path.resolve(import.meta.dirname, "..", "client", "src"));
   
-  if (isProduction) {
-    log("Setting up static file serving for production");
+  log(`Built files exist: ${isDeployment}, Vite source exists: ${hasViteSource}`);
+  log(`NODE_ENV: ${process.env.NODE_ENV || 'not set'}, REPLIT_DEPLOYMENT: ${process.env.REPLIT_DEPLOYMENT || 'not set'}`);
+  
+  // Use static serving ONLY in deployment or production, otherwise use Vite
+  if (process.env.REPLIT_DEPLOYMENT === '1' || (process.env.NODE_ENV === "production" && isDeployment)) {
+    log("Using static file serving (production/deployment mode)");
     serveStatic(app);
-  } else {
-    log("Setting up Vite development server");
+  } else if (hasViteSource) {
+    log("Using Vite development server");
     await setupVite(app, server);
+  } else {
+    log("No source found, using minimal serving");
+    app.get("*", (req, res) => {
+      res.status(404).send("Application not properly configured");
+    });
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT

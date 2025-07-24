@@ -107,13 +107,13 @@ export class DatabaseStorage implements IStorage {
 let storage: IStorage;
 
 try {
-  const isProduction = process.env.NODE_ENV === "production";
+  const isProduction = process.env.NODE_ENV === "production" || process.env.REPLIT_DEPLOYMENT === '1';
   const hasDatabase = !!process.env.DATABASE_URL;
   
-  console.log(`Environment: ${process.env.NODE_ENV || 'not set'}, Database available: ${hasDatabase}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'not set'}, REPLIT_DEPLOYMENT: ${process.env.REPLIT_DEPLOYMENT || 'not set'}, Database available: ${hasDatabase}`);
   
   if (hasDatabase && isProduction) {
-    console.log("Initializing database storage for production");
+    console.log("Initializing database storage for production/deployment");
     storage = new DatabaseStorage();
   } else {
     console.log(`Initializing memory storage for ${isProduction ? 'production' : 'development'}`);
