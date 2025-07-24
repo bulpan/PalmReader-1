@@ -182,9 +182,9 @@ export default function Home() {
       </section>
 
       {/* Palm Lines Guide Section */}
-      <section className="py-16 bg-mystic-100 dark:bg-mystic-800">
+      <section className="py-12 bg-mystic-100 dark:bg-mystic-800">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <h2 className="font-display text-4xl md:text-5xl font-bold text-mystic-purple dark:text-mystic-gold mb-6">
               {t('palmGuideTitle')}
             </h2>
@@ -194,7 +194,7 @@ export default function Home() {
           </div>
 
           <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
               {/* Palm Diagram */}
               <div className="relative">
                 <img 
@@ -206,7 +206,7 @@ export default function Home() {
               </div>
 
               {/* Palm Lines Explanations */}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <Card className="bg-white dark:bg-mystic-900 shadow-lg border-l-4 border-mystic-purple">
                   <CardContent className="p-6">
                     <div className="flex items-center mb-2">
@@ -298,7 +298,7 @@ export default function Home() {
 
 
       {/* Footer */}
-      <footer className="bg-mystic-900 dark:bg-black text-white py-12">
+      <footer className="bg-mystic-900 dark:bg-black text-white py-8">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
