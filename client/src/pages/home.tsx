@@ -193,20 +193,9 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
-              {/* Palm Diagram */}
-              <div className="relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=800" 
-                  alt="Palm reading diagram" 
-                  className="w-full rounded-2xl shadow-2xl"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-mystic-purple/20 to-transparent rounded-2xl"></div>
-              </div>
-
-              {/* Palm Lines Explanations */}
-              <div className="space-y-4">
+          <div className="max-w-4xl mx-auto">
+            {/* Palm Lines Explanations */}
+            <div className="grid md:grid-cols-2 gap-4">
                 <Card className="bg-white dark:bg-mystic-900 shadow-lg border-l-4 border-mystic-purple">
                   <CardContent className="p-6">
                     <div className="flex items-center mb-2">
@@ -282,7 +271,6 @@ export default function Home() {
                     </ul>
                   </CardContent>
                 </Card>
-              </div>
             </div>
           </div>
         </div>
