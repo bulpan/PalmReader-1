@@ -64,10 +64,17 @@ export class DatabaseStorage implements IStorage {
 
   constructor() {
     if (!process.env.DATABASE_URL) {
+      console.error("DATABASE_URL environment variable is not set. Falling back to memory storage.");
       throw new Error("DATABASE_URL environment variable is required");
     }
-    const sql = neon(process.env.DATABASE_URL);
-    this.db = drizzle(sql);
+    try {
+      const sql = neon(process.env.DATABASE_URL);
+      this.db = drizzle(sql);
+      console.log("Database connection established successfully");
+    } catch (error) {
+      console.error("Failed to connect to database:", error);
+      throw error;
+    }
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -97,4 +104,19 @@ export class DatabaseStorage implements IStorage {
 }
 
 // Use database storage in production, memory storage in development for faster iteration
-export const storage = process.env.DATABASE_URL ? new DatabaseStorage() : new MemStorage();
+let storage: IStorage;
+
+try {
+  if (process.env.DATABASE_URL && process.env.NODE_ENV === "production") {
+    console.log("Initializing database storage for production");
+    storage = new DatabaseStorage();
+  } else {
+    console.log("Initializing memory storage for development");
+    storage = new MemStorage();
+  }
+} catch (error) {
+  console.error("Failed to initialize database storage, falling back to memory storage:", error);
+  storage = new MemStorage();
+}
+
+export { storage };
