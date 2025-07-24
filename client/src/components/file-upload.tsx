@@ -31,7 +31,6 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing }:
       return await response.json();
     },
     onSuccess: (data) => {
-      console.log('Analysis result:', data);
       onAnalysisComplete(data.analysis);
       toast({
         title: t('analysisComplete'),
