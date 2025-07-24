@@ -11,6 +11,8 @@ interface PalmAnalysisResultProps {
 
 export function PalmAnalysisResult({ result }: PalmAnalysisResultProps) {
   const { t } = useTranslation();
+  
+  console.log('PalmAnalysisResult received:', result);
 
   const shareOnTwitter = () => {
     const text = encodeURIComponent(t('shareText'));
