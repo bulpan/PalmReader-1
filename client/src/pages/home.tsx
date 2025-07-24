@@ -27,7 +27,17 @@ export default function Home() {
 
   const handleAnalysisStart = () => {
     setIsAnalyzing(true);
+    // Clear previous results immediately
     setAnalysisResult(null);
+  };
+
+  const startNewAnalysis = () => {
+    setAnalysisResult(null);
+    setIsAnalyzing(false);
+    // Scroll back to upload section
+    setTimeout(() => {
+      document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const scrollToUpload = () => {
@@ -279,7 +289,7 @@ export default function Home() {
       {/* Results Section */}
       {analysisResult && (
         <section id="results-section" className="py-20 bg-gradient-to-b from-white to-mystic-50 dark:from-mystic-900 dark:to-mystic-800">
-          <PalmAnalysisResult result={analysisResult} />
+          <PalmAnalysisResult result={analysisResult} onNewAnalysis={startNewAnalysis} />
         </section>
       )}
 

@@ -2,14 +2,15 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Briefcase, Activity, User, Share, Download, Twitter } from "lucide-react";
+import { Heart, Briefcase, Activity, User, Share, Download, Twitter, RotateCcw } from "lucide-react";
 import type { PalmAnalysisResult } from "@shared/schema";
 
 interface PalmAnalysisResultProps {
   result: PalmAnalysisResult;
+  onNewAnalysis?: () => void;
 }
 
-export function PalmAnalysisResult({ result }: PalmAnalysisResultProps) {
+export function PalmAnalysisResult({ result, onNewAnalysis }: PalmAnalysisResultProps) {
   const { t } = useTranslation();
 
   const shareOnTwitter = () => {
@@ -161,12 +162,21 @@ ${t('confidence')}: ${result.confidence}%
           </Card>
         </div>
 
-        {/* Share Results */}
+        {/* Actions */}
         <div className="text-center">
           <h3 className="font-display text-2xl font-bold text-mystic-700 dark:text-mystic-200 mb-6">
             {t('shareResults')}
           </h3>
           <div className="flex flex-wrap justify-center gap-4">
+            {onNewAnalysis && (
+              <Button 
+                onClick={onNewAnalysis}
+                className="px-6 py-3 bg-gradient-to-r from-mystic-purple to-mystic-blue hover:from-purple-600 hover:to-blue-600 text-white rounded-lg transition-all flex items-center"
+              >
+                <RotateCcw className="w-5 h-5 mr-2" />
+                새로운 분석 시작
+              </Button>
+            )}
             <Button 
               onClick={shareOnTwitter}
               className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center"

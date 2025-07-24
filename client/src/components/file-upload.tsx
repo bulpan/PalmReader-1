@@ -70,6 +70,7 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing }:
       return;
     }
 
+    // Clear previous results immediately when starting new analysis
     onAnalysisStart();
     
     // Simulate progress
