@@ -1,4 +1,7 @@
 import { users, palmReadings, type User, type InsertUser, type PalmReading, type InsertPalmReading, type PalmAnalysisResult } from "@shared/schema";
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -56,4 +59,42 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  private db;
+
+  constructor() {
+    if (!process.env.DATABASE_URL) {
+      throw new Error("DATABASE_URL environment variable is required");
+    }
+    const sql = neon(process.env.DATABASE_URL);
+    this.db = drizzle(sql);
+  }
+
+  async getUser(id: number): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.username, username)).limit(1);
+    return result[0];
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const result = await this.db.insert(users).values(insertUser).returning();
+    return result[0];
+  }
+
+  async savePalmReading(insertReading: InsertPalmReading): Promise<PalmReading> {
+    const result = await this.db.insert(palmReadings).values(insertReading).returning();
+    return result[0];
+  }
+
+  async getPalmReadingBySessionId(sessionId: string): Promise<PalmReading | undefined> {
+    const result = await this.db.select().from(palmReadings).where(eq(palmReadings.sessionId, sessionId)).limit(1);
+    return result[0];
+  }
+}
+
+// Use database storage in production, memory storage in development for faster iteration
+export const storage = process.env.DATABASE_URL ? new DatabaseStorage() : new MemStorage();

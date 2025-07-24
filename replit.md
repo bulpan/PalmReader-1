@@ -111,6 +111,13 @@ The application uses the following deployment commands:
 - **Port Configuration**: Uses environment variable PORT (default 5000)
 - **Static Assets**: Served from dist/public in production mode
 
+### Database Configuration
+- **Database**: PostgreSQL with Neon serverless connection
+- **Storage Strategy**: DatabaseStorage for production, MemStorage for development
+- **Migration Command**: `npm run db:push` (using Drizzle Kit)
+- **Tables**: users, palm_readings with proper foreign keys and constraints
+- **Environment Variables**: DATABASE_URL automatically configured in deployment
+
 ### Key Configuration Files
 - **vite.config.ts**: Frontend build configuration with path aliases
 - **drizzle.config.ts**: Database configuration and migration setup
