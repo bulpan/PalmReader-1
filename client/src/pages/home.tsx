@@ -35,7 +35,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-mystic-50 to-white dark:from-mystic-900 dark:to-mystic-800 transition-colors duration-300">
+    <div className="bg-gradient-to-b from-mystic-50 to-white dark:from-mystic-900 dark:to-mystic-800 transition-colors duration-300">
       {/* Floating Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="floating-orb w-32 h-32 bg-mystic-purple/20 top-1/4 left-1/4"></div>
@@ -182,7 +182,7 @@ export default function Home() {
       </section>
 
       {/* Palm Lines Guide Section */}
-      <section className="py-20 bg-mystic-100 dark:bg-mystic-800">
+      <section className="py-16 bg-mystic-100 dark:bg-mystic-800">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="font-display text-4xl md:text-5xl font-bold text-mystic-purple dark:text-mystic-gold mb-6">
@@ -294,6 +294,8 @@ export default function Home() {
           <PalmAnalysisResult result={analysisResult} />
         </section>
       )}
+
+
 
       {/* Footer */}
       <footer className="bg-mystic-900 dark:bg-black text-white py-12">
