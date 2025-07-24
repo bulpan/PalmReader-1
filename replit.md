@@ -104,6 +104,13 @@ The application follows a monorepo structure with clear separation between clien
 - **Environment Variables**: Requires `DATABASE_URL` for database connectivity
 - **Deployment Type**: **Autoscale** (not Static) - required for fullstack app with image upload and API functionality
 
+### Deployment Configuration
+The application uses the following deployment commands:
+- **Build Command**: `npm run build` (builds frontend + backend)
+- **Start Command**: `npm run start` (runs NODE_ENV=production node dist/index.js)
+- **Port Configuration**: Uses environment variable PORT (default 5000)
+- **Static Assets**: Served from dist/public in production mode
+
 ### Key Configuration Files
 - **vite.config.ts**: Frontend build configuration with path aliases
 - **drizzle.config.ts**: Database configuration and migration setup
