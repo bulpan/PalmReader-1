@@ -102,6 +102,7 @@ The application follows a monorepo structure with clear separation between clien
 - **Backend**: esbuild bundles server code to `dist/index.js`
 - **Database Migrations**: Drizzle Kit handles schema migrations
 - **Environment Variables**: Requires `DATABASE_URL` for database connectivity
+- **Deployment Type**: **Autoscale** (not Static) - required for fullstack app with image upload and API functionality
 
 ### Key Configuration Files
 - **vite.config.ts**: Frontend build configuration with path aliases
