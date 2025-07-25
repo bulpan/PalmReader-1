@@ -4,7 +4,7 @@ import { FileUpload } from "@/components/file-upload";
 import { PalmAnalysisResult } from "@/components/palm-analysis-result";
 import { AdSidebar } from "@/components/ad-sidebar";
 import { BottomAdBanner } from "@/components/bottom-ad-banner";
-import { MiddleBannerAd } from "@/components/google-adsense";
+
 import { CulturalContextSelector } from "@/components/cultural-context-selector";
 import { LanguageSelector } from "@/components/language-selector";
 import { UserFeedback } from "@/components/user-feedback";
@@ -185,10 +185,7 @@ export default function Home() {
               autoDetected={autoDetected}
             />
 
-            {/* Google Ad Banner - Top */}
-            <div className="mt-8 mb-6">
-              <MiddleBannerAd />
-            </div>
+
 
             {/* Upload Tips */}
             <div className="grid md:grid-cols-3 gap-4 mt-8">
@@ -251,10 +248,7 @@ export default function Home() {
           </div>
 
           <div className="max-w-4xl mx-auto">
-            {/* Google Ad Banner - Before Palm Lines */}
-            <div className="mb-8">
-              <MiddleBannerAd />
-            </div>
+
 
             {/* Palm Lines Explanations */}
             <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
@@ -335,10 +329,7 @@ export default function Home() {
                 </Card>
             </div>
 
-            {/* Google Ad Banner - After Palm Lines */}
-            <div className="mt-8">
-              <MiddleBannerAd />
-            </div>
+
           </div>
         </div>
       </section>

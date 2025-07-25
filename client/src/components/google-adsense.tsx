@@ -130,18 +130,7 @@ export function BottomFixedAd() {
   );
 }
 
-// 중간 배너 광고 (수평형, 반응형)
-export function MiddleBannerAd() {
-  return (
-    <div className="w-full my-4">
-      <GoogleAd 
-        slot="8793335020"
-        className="w-full"
-        style={{ display: "block", minHeight: "90px" }}
-      />
-    </div>
-  );
-}
+
 
 // 우측 스카이스크래퍼 광고 (수직형, 반응형)
 export function SidebarSkyscraperAd() {

@@ -6,7 +6,7 @@ import { Heart, Briefcase, Activity, User, Share, Download, Twitter, RotateCcw, 
 import { getCulturalDisplayName } from "@/lib/cultural-detection";
 import { UserFeedback } from "@/components/user-feedback";
 import { useMobileDetection, shareContent } from "@/hooks/use-mobile-detection";
-import { MiddleBannerAd } from "@/components/google-adsense";
+
 import type { PalmAnalysisResult } from "@shared/schema";
 
 interface PalmAnalysisResultProps {
@@ -198,10 +198,7 @@ ${t('confidence')}: ${result.confidence}%
           </Card>
         </div>
 
-        {/* Google Ad Banner - Middle */}
-        <div className="my-8">
-          <MiddleBannerAd />
-        </div>
+
 
         {/* Actions */}
         <div className="text-center">
@@ -254,10 +251,7 @@ ${t('confidence')}: ${result.confidence}%
           <UserFeedback />
         </div>
 
-        {/* Google Ad Banner - Bottom */}
-        <div className="mt-8">
-          <MiddleBannerAd />
-        </div>
+
       </div>
     </div>
   );
