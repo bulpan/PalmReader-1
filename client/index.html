@@ -61,15 +61,61 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5791689664896394" crossorigin="anonymous"></script>
   </head>
   <body>
-    <!-- 애드센스 테스트 - HTML 직접 삽입 -->
-    <div id="html-adsense-test" style="position: fixed; top: 100px; right: 20px; width: 300px; height: 250px; background: yellow; z-index: 9999; padding: 10px; border: 2px solid red;">
-      <h3>HTML 직접 삽입 테스트</h3>
-      <ins class="adsbygoogle"
-           style="display:block; width:280px; height:200px;"
-           data-ad-client="ca-pub-5791689664896394"
-           data-ad-slot="2007004200"></ins>
+    <!-- 애드센스 진단 정보 -->
+    <div id="adsense-diagnostic" style="position: fixed; top: 100px; right: 20px; width: 350px; background: #f0f0f0; z-index: 9999; padding: 15px; border: 2px solid #333; font-family: monospace; font-size: 12px;">
+      <h3 style="margin: 0 0 10px 0; color: #333;">애드센스 진단 정보</h3>
+      <div id="diagnostic-info">로딩 중...</div>
+      
+      <!-- 실제 애드센스 테스트 -->
+      <div style="margin-top: 15px; border: 1px solid red; background: white;">
+        <p style="margin: 5px; font-size: 10px;">애드센스 테스트 영역:</p>
+        <ins class="adsbygoogle"
+             style="display:block; width:320px; height:100px; background: #fafafa;"
+             data-ad-client="ca-pub-5791689664896394"
+             data-ad-slot="2007004200"
+             data-ad-format="rectangle"></ins>
+      </div>
+      
       <script>
-           (adsbygoogle = window.adsbygoogle || []).push({});
+        // 진단 정보 수집
+        setTimeout(() => {
+          const diagnosticDiv = document.getElementById('diagnostic-info');
+          const info = [];
+          
+          // 애드센스 스크립트 로드 확인
+          const adScript = document.querySelector('script[src*="adsbygoogle.js"]');
+          info.push(`📜 스크립트: ${adScript ? '✅ 로드됨' : '❌ 없음'}`);
+          
+          // window.adsbygoogle 확인
+          info.push(`🌐 adsbygoogle: ${typeof window.adsbygoogle !== 'undefined' ? '✅ 존재' : '❌ 없음'}`);
+          
+          // 현재 도메인
+          info.push(`🔗 도메인: ${window.location.hostname}`);
+          
+          // 뷰포트 크기
+          info.push(`📱 뷰포트: ${window.innerWidth}x${window.innerHeight}`);
+          
+          // 광고 컨테이너 확인
+          const adElements = document.querySelectorAll('.adsbygoogle');
+          info.push(`📦 광고 요소: ${adElements.length}개`);
+          
+          // User Agent (브라우저 정보)
+          const ua = navigator.userAgent;
+          if (ua.includes('Mobile')) info.push(`📱 모바일 브라우저`);
+          if (ua.includes('Chrome')) info.push(`🌐 Chrome 브라우저`);
+          
+          diagnosticDiv.innerHTML = info.join('<br>');
+          
+          // 애드센스 초기화 시도
+          try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            info.push(`✅ 애드센스 푸시 성공`);
+          } catch (error) {
+            info.push(`❌ 에러: ${error.message}`);
+          }
+          
+          diagnosticDiv.innerHTML = info.join('<br>');
+        }, 2000);
       </script>
     </div>
     <div id="root"></div>
