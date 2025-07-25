@@ -32,49 +32,7 @@ function analyzePalmLines(imageBuffer: Buffer, culturalContext: CulturalContext 
   const imageRandom = (min: number, max: number) => (imageHash + min * 17 + max * 23) % (max - min + 1) + min;
   const imageChoice = <T>(array: T[], offset = 0) => array[(imageHash + offset * 31) % array.length];
   
-  const heartLineTraits = [
-    "연애 생활에 만족감을 느끼는 성향",
-    "사랑에 대해 진실하고 헌신적",
-    "감정 표현이 자유로움",
-    "로맨틱한 관계를 중시함",
-    "깊은 애정을 추구하는 성향",
-    "관계에서 안정성을 중요시함",
-    "정서적 유대감을 소중히 여김",
-    "이상적인 사랑을 꿈꾸는 타입"
-  ];
-  
-  const headLineTraits = [
-    "창의적이고 직감적인 사고",
-    "실용적인 문제 해결 능력",
-    "집중력이 뛰어남",
-    "분석적 사고를 선호함",
-    "논리적이고 체계적인 사고",
-    "독창적인 아이디어가 풍부함",
-    "학습 능력이 뛰어남",
-    "세밀한 계획을 세우는 것을 좋아함"
-  ];
-  
-  const lifeLineTraits = [
-    "활력이 넘치고 에너지가 풍부",
-    "건강한 삶을 누릴 가능성이 높음",
-    "강한 생명력과 체력",
-    "변화에 잘 적응함",
-    "자연 치유력이 강함",
-    "스트레스 관리 능력이 뛰어남",
-    "장수할 가능성이 높음",
-    "활동적인 생활을 선호함"
-  ];
-  
-  const fateLineTraits = [
-    "목표 지향적이고 의지가 강함",
-    "외부 환경에 영향을 잘 받음",
-    "인생에서 중요한 변화를 경험",
-    "자수성가형의 성향",
-    "리더십 능력이 뛰어남",
-    "도전을 두려워하지 않음",
-    "운명적인 만남이 많음",
-    "사회적 성공 가능성이 높음"
-  ];
+
 
   // Get cultural analysis templates
   const culturalData = getCulturalAnalysis(culturalContext, language);
