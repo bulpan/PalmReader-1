@@ -21,25 +21,28 @@ export function GoogleAd({
   style = { display: "block" },
   className = "" 
 }: GoogleAdProps) {
+  const adRef = useRef<HTMLElement>(null);
+  const [hasInitialized, setHasInitialized] = useState(false);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (!hasInitialized && adRef.current) {
       try {
         if (typeof window !== "undefined" && window.adsbygoogle) {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
+          setHasInitialized(true);
         }
       } catch (error) {
         console.error("Google AdSense error:", error);
       }
-    }, 100); // 100ms 지연으로 DOM이 완전히 렌더링된 후 실행
-
-    return () => clearTimeout(timer);
-  }, []);
+    }
+  }, [hasInitialized]);
 
   return (
-    <div className={className} style={{ minWidth: "320px", minHeight: "50px" }}>
+    <div className={className}>
       <ins 
+        ref={adRef}
         className="adsbygoogle"
-        style={{ ...style, width: "100%", height: "auto" }}
+        style={style}
         data-ad-client="ca-pub-5791689664896394"
         data-ad-slot={slot}
         data-ad-format={format}
@@ -52,16 +55,11 @@ export function GoogleAd({
 // 최하단 고정영역 광고 (사각형, 반응형) - 항상 보이므로 바로 로드
 export function BottomFixedAd() {
   return (
-    <div 
-      className="w-full min-h-[90px] bg-gray-50 dark:bg-gray-800 rounded-lg p-2"
-      style={{ minWidth: "320px" }}
-    >
-      <GoogleAd 
-        slot="2007004200"
-        className="w-full h-full"
-        style={{ display: "block", minHeight: "90px", width: "100%" }}
-      />
-    </div>
+    <GoogleAd 
+      slot="2007004200"
+      className="w-full"
+      style={{ display: "block", minHeight: "90px" }}
+    />
   );
 }
 
