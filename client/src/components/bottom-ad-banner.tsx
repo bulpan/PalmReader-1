@@ -1,10 +1,27 @@
+import React, { useEffect } from 'react';
 import { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BottomFixedAd } from "@/components/google-adsense";
+
+declare global {
+  interface Window {
+    adsbygoogle: any;
+  }
+}
 
 export function BottomAdBanner() {
   const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    // 가장 단순한 버전
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (error) {
+      console.error("AdSense error:", error);
+    }
+  }, [isVisible]);
 
   if (!isVisible) {
     return null;
@@ -24,9 +41,14 @@ export function BottomAdBanner() {
           <X className="w-3 h-3" />
         </Button>
 
-        {/* Google AdSense Ad */}
+        {/* Google AdSense Ad - 최단 단순 버전 */}
         <div className="w-full px-4 py-2">
-          <BottomFixedAd />
+          <ins 
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-5791689664896394"
+            data-ad-slot="2007004200"
+          />
         </div>
       </div>
     </div>
