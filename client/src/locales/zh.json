@@ -68,5 +68,8 @@
   "feedbackSuccess": "反馈提交成功！",
   "feedbackError": "反馈提交失败",
   "feedbackErrorDesc": "请稍后重试",
-  "feedbackRequired": "请填写所有必填项"
+  "feedbackRequired": "请填写所有必填项",
+  "seoTitle": "AI手相分析 - 手相神秘 | 免费看手相算命",
+  "seoDescription": "通过AI技术获得准确的手相分析。免费手相分析，爱情运势，财运，健康运势即时查看。东西方传统手相学与现代AI技术的融合。",
+  "seoKeywords": "看手相, 手相分析, AI手相, 免费算命, 占星, 塔罗, 占卜, 手相学, 手相解读, 运势查看"
 }

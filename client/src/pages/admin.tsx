@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -88,6 +88,24 @@ export default function AdminPage() {
         return <Clock className="w-4 h-4 text-gray-600" />;
     }
   };
+
+  // SEO for admin page
+  useEffect(() => {
+    if (isAuthenticated) {
+      document.title = "관리자 페이지 - Palm Mystic";
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', '관리자 전용 페이지');
+      }
+      // Block indexing for admin page
+      const robotsMeta = document.querySelector('meta[name="robots"]') || document.createElement('meta');
+      robotsMeta.setAttribute('name', 'robots');
+      robotsMeta.setAttribute('content', 'noindex, nofollow');
+      if (!document.querySelector('meta[name="robots"]')) {
+        document.head.appendChild(robotsMeta);
+      }
+    }
+  }, [isAuthenticated]);
 
   // Show login screen if not authenticated
   if (!isAuthenticated) {

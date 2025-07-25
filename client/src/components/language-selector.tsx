@@ -26,20 +26,24 @@ export function LanguageSelector() {
 
   return (
     <Select value={i18n.language} onValueChange={changeLanguage}>
-      <SelectTrigger className="w-[120px] bg-transparent border border-mystic-300 dark:border-mystic-600">
+      <SelectTrigger className="w-[120px] bg-white dark:bg-mystic-800 border border-mystic-300 dark:border-mystic-600 text-mystic-700 dark:text-mystic-200 hover:bg-mystic-50 dark:hover:bg-mystic-700 focus:ring-2 focus:ring-mystic-purple focus:border-mystic-purple">
         <SelectValue>
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-2 text-mystic-700 dark:text-mystic-200">
             <span>{currentLanguage.flag}</span>
-            <span className="hidden sm:inline">{currentLanguage.name}</span>
+            <span className="hidden sm:inline font-medium">{currentLanguage.name}</span>
           </span>
         </SelectValue>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="bg-white dark:bg-mystic-800 border border-mystic-300 dark:border-mystic-600 shadow-lg">
         {languages.map((language) => (
-          <SelectItem key={language.code} value={language.code}>
+          <SelectItem 
+            key={language.code} 
+            value={language.code}
+            className="text-mystic-700 dark:text-mystic-200 hover:bg-mystic-50 dark:hover:bg-mystic-700 focus:bg-mystic-100 dark:focus:bg-mystic-600"
+          >
             <span className="flex items-center gap-2">
               <span>{language.flag}</span>
-              <span>{language.name}</span>
+              <span className="font-medium">{language.name}</span>
             </span>
           </SelectItem>
         ))}

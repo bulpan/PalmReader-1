@@ -68,5 +68,8 @@
   "feedbackSuccess": "フィードバックの送信が完了しました！",
   "feedbackError": "フィードバックの送信に失敗しました",
   "feedbackErrorDesc": "しばらく後に再試行してください",
-  "feedbackRequired": "すべての必須項目を入力してください"
+  "feedbackRequired": "すべての必須項目を入力してください",
+  "seoTitle": "AI手相占い - Palm Mystic | 無料手相鑑定",
+  "seoDescription": "AI技術で正確な手相分析を受けてみてください。無料手相占い、恋愛運、金運、健康運を即座に確認。東洋と西洋の伝統手相術と現代AI技術の融合。",
+  "seoKeywords": "手相占い, 手相分析, AI手相, 無料占い, 星占い, タロット, 占術, 手相学, 手相鑑定, 運勢"
 }
