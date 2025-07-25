@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { FileUpload } from "@/components/file-upload";
 import { PalmAnalysisResult } from "@/components/palm-analysis-result";
 import { AdSidebar } from "@/components/ad-sidebar";
+import { BottomAdBanner } from "@/components/bottom-ad-banner";
 import { CulturalContextSelector } from "@/components/cultural-context-selector";
 import { LanguageSelector } from "@/components/language-selector";
 import { UserFeedback } from "@/components/user-feedback";
@@ -367,8 +368,8 @@ export default function Home() {
 
 
 
-      {/* Footer */}
-      <footer className="bg-mystic-900 dark:bg-black text-white py-8">
+      {/* Footer - Add bottom padding for ad banner */}
+      <footer className="bg-mystic-900 dark:bg-black text-white py-8 pb-24">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
@@ -412,6 +413,9 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Bottom Ad Banner */}
+      <BottomAdBanner />
     </div>
   );
 }
