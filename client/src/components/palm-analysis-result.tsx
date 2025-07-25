@@ -66,6 +66,14 @@ ${t('confidence')}: ${result.confidence}%
         </Badge>
       </div>
 
+      {/* Google Ad Banner - Before Results */}
+      <div className="mb-8">
+        <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center max-w-4xl mx-auto">
+          <div className="text-xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
+          <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">728 x 90 (Leaderboard)</div>
+        </div>
+      </div>
+
       <div className="max-w-4xl mx-auto">
         {/* Overall Reading */}
         <Card className="bg-gradient-to-r from-mystic-purple to-mystic-blue p-8 text-white mb-8 shadow-2xl">
@@ -162,6 +170,14 @@ ${t('confidence')}: ${result.confidence}%
           </Card>
         </div>
 
+        {/* Google Ad Banner - Middle */}
+        <div className="my-8">
+          <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
+            <div className="text-xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
+            <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">300 x 250 (Medium Rectangle)</div>
+          </div>
+        </div>
+
         {/* Actions */}
         <div className="text-center">
           <h3 className="font-display text-2xl font-bold text-mystic-700 dark:text-mystic-200 mb-6">
@@ -191,6 +207,14 @@ ${t('confidence')}: ${result.confidence}%
               <Download className="w-5 h-5 mr-2" />
               {t('saveResult')}
             </Button>
+          </div>
+        </div>
+
+        {/* Google Ad Banner - Bottom */}
+        <div className="mt-8">
+          <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
+            <div className="text-xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
+            <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">728 x 90 (Leaderboard)</div>
           </div>
         </div>
       </div>

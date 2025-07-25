@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FileUpload } from "@/components/file-upload";
 import { PalmAnalysisResult } from "@/components/palm-analysis-result";
+import { AdSidebar } from "@/components/ad-sidebar";
 import { LanguageSelector } from "@/components/language-selector";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -46,6 +47,9 @@ export default function Home() {
 
   return (
     <div className="bg-gradient-to-b from-mystic-50 to-white dark:from-mystic-900 dark:to-mystic-800 transition-colors duration-300">
+      {/* Ad Sidebar */}
+      <AdSidebar />
+      
       {/* Floating Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="floating-orb w-32 h-32 bg-mystic-purple/20 top-1/4 left-1/4"></div>
@@ -120,7 +124,7 @@ export default function Home() {
                 const palmGuideSection = document.getElementById('palm-guide-section');
                 palmGuideSection?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-mystic-purple font-semibold text-lg rounded-full transition-all duration-300"
+              className="px-8 py-4 border-2 border-white/90 text-white bg-black/20 hover:bg-white hover:text-mystic-purple font-semibold text-lg rounded-full transition-all duration-300 backdrop-blur-sm"
             >
               {t('learnMore')}
             </Button>
@@ -146,6 +150,14 @@ export default function Home() {
               onAnalysisStart={handleAnalysisStart}
               isAnalyzing={isAnalyzing}
             />
+
+            {/* Google Ad Banner - Top */}
+            <div className="mt-8 mb-6">
+              <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
+                <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
+                <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">728 x 90 (Leaderboard)</div>
+              </div>
+            </div>
 
             {/* Upload Tips */}
             <div className="grid md:grid-cols-3 gap-4 mt-8">
@@ -208,6 +220,14 @@ export default function Home() {
           </div>
 
           <div className="max-w-4xl mx-auto">
+            {/* Google Ad Banner - Before Palm Lines */}
+            <div className="mb-8">
+              <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
+                <div className="text-xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
+                <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">728 x 90 (Leaderboard)</div>
+              </div>
+            </div>
+
             {/* Palm Lines Explanations */}
             <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
                 <Card className="bg-white dark:bg-mystic-900 shadow-lg border-l-4 border-mystic-purple">
@@ -285,6 +305,14 @@ export default function Home() {
                     </ul>
                   </CardContent>
                 </Card>
+            </div>
+
+            {/* Google Ad Banner - After Palm Lines */}
+            <div className="mt-8">
+              <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
+                <div className="text-xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
+                <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">728 x 90 (Leaderboard)</div>
+              </div>
             </div>
           </div>
         </div>
