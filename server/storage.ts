@@ -166,11 +166,11 @@ try {
   
   console.log(`Environment: ${process.env.NODE_ENV || 'not set'}, REPLIT_DEPLOYMENT: ${process.env.REPLIT_DEPLOYMENT || 'not set'}, Database available: ${hasDatabase}`);
   
-  if (hasDatabase && isProduction) {
-    console.log("Initializing database storage for production/deployment");
+  if (hasDatabase) {
+    console.log("Initializing database storage - database available");
     storage = new DatabaseStorage();
   } else {
-    console.log(`Initializing memory storage for ${isProduction ? 'production' : 'development'}`);
+    console.log(`Initializing memory storage - no database available`);
     storage = new MemStorage();
   }
 } catch (error) {
