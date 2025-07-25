@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Heart, Briefcase, Activity, User, Share, Download, Twitter, RotateCcw, Globe } from "lucide-react";
 import { getCulturalDisplayName } from "@/lib/cultural-detection";
+import { UserFeedback } from "@/components/user-feedback";
+import { useMobileDetection, shareContent } from "@/hooks/use-mobile-detection";
 import type { PalmAnalysisResult } from "@shared/schema";
 
 interface PalmAnalysisResultProps {
@@ -13,6 +15,20 @@ interface PalmAnalysisResultProps {
 
 export function PalmAnalysisResult({ result, onNewAnalysis }: PalmAnalysisResultProps) {
   const { t } = useTranslation();
+  const { isMobile } = useMobileDetection();
+
+  const handleShare = () => {
+    const title = t('siteName');
+    const text = t('shareText');
+    const url = window.location.href;
+    
+    if (isMobile) {
+      shareContent(title, text, url);
+    } else {
+      // Desktop fallback - copy to clipboard
+      navigator.clipboard.writeText(`${title}\n${text}\n${url}`);
+    }
+  };
 
   const shareOnTwitter = () => {
     const text = encodeURIComponent(t('shareText'));
@@ -194,31 +210,50 @@ ${t('confidence')}: ${result.confidence}%
           <h3 className="font-display text-2xl font-bold text-mystic-700 dark:text-mystic-200 mb-6">
             {t('shareResults')}
           </h3>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
             {onNewAnalysis && (
               <Button 
                 onClick={onNewAnalysis}
                 className="px-6 py-3 bg-gradient-to-r from-mystic-purple to-mystic-blue hover:from-purple-600 hover:to-blue-600 text-white rounded-lg transition-all flex items-center"
+                data-testid="button-new-analysis"
               >
                 <RotateCcw className="w-5 h-5 mr-2" />
                 새로운 분석 시작
               </Button>
             )}
-            <Button 
-              onClick={shareOnTwitter}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center"
-            >
-              <Twitter className="w-5 h-5 mr-2" />
-              Twitter
-            </Button>
-            <Button 
-              onClick={downloadResult}
-              className="px-6 py-3 bg-mystic-purple hover:bg-purple-700 text-white rounded-lg transition-colors flex items-center"
-            >
-              <Download className="w-5 h-5 mr-2" />
-              {t('saveResult')}
-            </Button>
+            {isMobile ? (
+              <Button 
+                onClick={handleShare}
+                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center"
+                data-testid="button-share-mobile"
+              >
+                <Share className="w-5 h-5 mr-2" />
+                공유하기
+              </Button>
+            ) : (
+              <>
+                <Button 
+                  onClick={shareOnTwitter}
+                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center"
+                  data-testid="button-share-twitter"
+                >
+                  <Twitter className="w-5 h-5 mr-2" />
+                  Twitter
+                </Button>
+                <Button 
+                  onClick={downloadResult}
+                  className="px-6 py-3 bg-mystic-purple hover:bg-purple-700 text-white rounded-lg transition-colors flex items-center"
+                  data-testid="button-download"
+                >
+                  <Download className="w-5 h-5 mr-2" />
+                  {t('saveResult')}
+                </Button>
+              </>
+            )}
           </div>
+
+          {/* User Feedback Component */}
+          <UserFeedback />
         </div>
 
         {/* Google Ad Banner - Bottom */}

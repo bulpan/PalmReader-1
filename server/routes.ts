@@ -2,8 +2,9 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import multer from "multer";
 import { storage } from "./storage";
-import { insertPalmReadingSchema, type PalmAnalysisResult, type CulturalContext } from "@shared/schema";
+import { insertPalmReadingSchema, insertUserFeedbackSchema, type PalmAnalysisResult, type CulturalContext, type InsertUserFeedback } from "@shared/schema";
 import { getCulturalAnalysis } from "./cultural-analysis.js";
+import { sendEmail } from "./sendgrid.js";
 import { z } from "zod";
 
 // Configure multer for file uploads
@@ -199,6 +200,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Get palm reading error:', error);
       res.status(500).json({ message: "분석 결과 조회 중 오류가 발생했습니다." });
+    }
+  });
+
+  // User feedback routes
+  app.post('/api/feedback', async (req, res) => {
+    try {
+      const validatedData = insertUserFeedbackSchema.parse(req.body);
+      const result = await storage.createUserFeedback(validatedData);
+      res.json(result);
+    } catch (error) {
+      console.error('Error creating feedback:', error);
+      res.status(400).json({ error: 'Invalid feedback data' });
+    }
+  });
+
+  // Admin feedback routes
+  app.get('/api/admin/feedback', async (req, res) => {
+    try {
+      const feedbacks = await storage.getAllUserFeedback();
+      res.json(feedbacks);
+    } catch (error) {
+      console.error('Error fetching feedback:', error);
+      res.status(500).json({ error: 'Failed to fetch feedback' });
+    }
+  });
+
+  app.patch('/api/admin/feedback/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      
+      if (!['검토', '적용', '거절'].includes(status)) {
+        return res.status(400).json({ error: 'Invalid status' });
+      }
+
+      const feedback = await storage.updateUserFeedbackStatus(id, status);
+      
+      // Send email if status is "적용"
+      if (status === '적용' && feedback) {
+        const emailSent = await sendEmail({
+          to: feedback.email,
+          from: 'andipark2015@gmail.com',
+          subject: '당신의 요청사항이 반영되었습니다',
+          text: feedback.request,
+          html: `<p>${feedback.request.replace(/\n/g, '<br>')}</p>`
+        });
+        
+        if (!emailSent) {
+          console.error('Failed to send email notification');
+        }
+      }
+      
+      res.json(feedback);
+    } catch (error) {
+      console.error('Error updating feedback status:', error);
+      res.status(500).json({ error: 'Failed to update feedback status' });
     }
   });
 

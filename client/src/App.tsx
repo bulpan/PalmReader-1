@@ -7,12 +7,14 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./lib/i18n";
 import Home from "@/pages/home";
+import AdminPage from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/admin" component={AdminPage} />
       <Route component={NotFound} />
     </Switch>
   );

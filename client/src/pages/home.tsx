@@ -5,6 +5,7 @@ import { PalmAnalysisResult } from "@/components/palm-analysis-result";
 import { AdSidebar } from "@/components/ad-sidebar";
 import { CulturalContextSelector } from "@/components/cultural-context-selector";
 import { LanguageSelector } from "@/components/language-selector";
+import { UserFeedback } from "@/components/user-feedback";
 import { detectCulturalContext } from "@/lib/cultural-detection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -107,21 +108,21 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center mystical-gradient">
+      {/* Hero Section - Mobile Optimized */}
+      <section className="relative min-h-[60vh] md:min-h-screen flex items-center justify-center mystical-gradient">
         <div className="absolute inset-0 bg-cover bg-center opacity-20" 
              style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080")' }}></div>
         
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <div className="animate-float mb-8">
-            <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-r from-mystic-purple via-mystic-blue to-mystic-gold p-1">
+          <div className="animate-float mb-4 md:mb-8">
+            <div className="w-20 h-20 md:w-32 md:h-32 mx-auto rounded-full bg-gradient-to-r from-mystic-purple via-mystic-blue to-mystic-gold p-1">
               <div className="w-full h-full rounded-full bg-mystic-900 flex items-center justify-center">
-                <Sparkles className="w-16 h-16 text-mystic-gold animate-pulse" />
+                <Sparkles className="w-10 h-10 md:w-16 md:h-16 text-mystic-gold animate-pulse" />
               </div>
             </div>
           </div>
           
-          <h1 className="font-display text-5xl md:text-7xl font-bold text-white mb-6">
+          <h1 className="font-display text-3xl md:text-5xl lg:text-7xl font-bold text-white mb-4 md:mb-6">
             {t('heroTitle')} <span className="text-mystic-gold">{t('heroSubtitle')}</span>
           </h1>
           <p className="text-xl md:text-2xl text-mystic-100 mb-8 max-w-2xl mx-auto">
@@ -346,8 +347,17 @@ export default function Home() {
 
       {/* Results Section */}
       {analysisResult && (
-        <section id="results-section" className="py-20 bg-gradient-to-b from-white to-mystic-50 dark:from-mystic-900 dark:to-mystic-800">
+        <section id="results-section" className="py-10 md:py-20 bg-gradient-to-b from-white to-mystic-50 dark:from-mystic-900 dark:to-mystic-800">
           <PalmAnalysisResult result={analysisResult} onNewAnalysis={startNewAnalysis} />
+        </section>
+      )}
+
+      {/* User Feedback Section - Only show when no analysis result */}
+      {!analysisResult && (
+        <section className="py-16 bg-mystic-50 dark:bg-mystic-800">
+          <div className="container mx-auto px-4 text-center">
+            <UserFeedback />
+          </div>
         </section>
       )}
 

@@ -1,7 +1,7 @@
-import { users, palmReadings, type User, type InsertUser, type PalmReading, type InsertPalmReading, type PalmAnalysisResult } from "@shared/schema";
+import { users, palmReadings, userFeedback, type User, type InsertUser, type PalmReading, type InsertPalmReading, type UserFeedback, type InsertUserFeedback } from "@shared/schema";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -9,19 +9,26 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   savePalmReading(reading: InsertPalmReading): Promise<PalmReading>;
   getPalmReadingBySessionId(sessionId: string): Promise<PalmReading | undefined>;
+  createUserFeedback(feedback: InsertUserFeedback): Promise<UserFeedback>;
+  getAllUserFeedback(): Promise<UserFeedback[]>;
+  updateUserFeedbackStatus(id: number, status: string): Promise<UserFeedback | undefined>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private palmReadings: Map<number, PalmReading>;
+  private userFeedbacks: Map<number, UserFeedback>;
   private currentUserId: number;
   private currentReadingId: number;
+  private currentFeedbackId: number;
 
   constructor() {
     this.users = new Map();
     this.palmReadings = new Map();
+    this.userFeedbacks = new Map();
     this.currentUserId = 1;
     this.currentReadingId = 1;
+    this.currentFeedbackId = 1;
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -56,6 +63,35 @@ export class MemStorage implements IStorage {
     return Array.from(this.palmReadings.values()).find(
       (reading) => reading.sessionId === sessionId,
     );
+  }
+
+  async createUserFeedback(insertFeedback: InsertUserFeedback): Promise<UserFeedback> {
+    const id = this.currentFeedbackId++;
+    const feedback: UserFeedback = {
+      ...insertFeedback,
+      id,
+      status: "검토",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.userFeedbacks.set(id, feedback);
+    return feedback;
+  }
+
+  async getAllUserFeedback(): Promise<UserFeedback[]> {
+    return Array.from(this.userFeedbacks.values()).sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async updateUserFeedbackStatus(id: number, status: string): Promise<UserFeedback | undefined> {
+    const feedback = this.userFeedbacks.get(id);
+    if (feedback) {
+      feedback.status = status;
+      feedback.updatedAt = new Date();
+      this.userFeedbacks.set(id, feedback);
+    }
+    return feedback;
   }
 }
 
@@ -99,6 +135,24 @@ export class DatabaseStorage implements IStorage {
 
   async getPalmReadingBySessionId(sessionId: string): Promise<PalmReading | undefined> {
     const result = await this.db.select().from(palmReadings).where(eq(palmReadings.sessionId, sessionId)).limit(1);
+    return result[0];
+  }
+
+  async createUserFeedback(insertFeedback: InsertUserFeedback): Promise<UserFeedback> {
+    const result = await this.db.insert(userFeedback).values(insertFeedback).returning();
+    return result[0];
+  }
+
+  async getAllUserFeedback(): Promise<UserFeedback[]> {
+    const result = await this.db.select().from(userFeedback).orderBy(desc(userFeedback.createdAt));
+    return result;
+  }
+
+  async updateUserFeedbackStatus(id: number, status: string): Promise<UserFeedback | undefined> {
+    const result = await this.db.update(userFeedback)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(userFeedback.id, id))
+      .returning();
     return result[0];
   }
 }

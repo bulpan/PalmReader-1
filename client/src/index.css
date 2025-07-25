@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Performance optimizations */
+* {
+  box-sizing: border-box;
+}
+
+/* Enable GPU acceleration for animations */
+.floating-orb, .animate-float, .animate-pulse {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Optimize images */
+img {
+  image-rendering: optimizeQuality;
+  object-fit: cover;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .floating-orb, .animate-float, .animate-pulse {
+    animation: none !important;
+  }
+}
+
 :root {
   --background: hsl(248, 22%, 97%);
   --foreground: hsl(240, 21%, 15%);
