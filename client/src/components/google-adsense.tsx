@@ -22,7 +22,6 @@ export function GoogleAd({
   className = "" 
 }: GoogleAdProps) {
   useEffect(() => {
-    // DOM이 완전히 로드된 후 애드센스 실행
     const timer = setTimeout(() => {
       try {
         if (typeof window !== "undefined" && window.adsbygoogle) {
@@ -31,16 +30,21 @@ export function GoogleAd({
       } catch (error) {
         console.error("Google AdSense error:", error);
       }
-    }, 500); // 0.5초 지연
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div className={className}>
+    <div className={className} style={{ width: "100%", minWidth: "320px", minHeight: "90px" }}>
       <ins 
         className="adsbygoogle"
-        style={style}
+        style={{ 
+          display: "block", 
+          width: "100%", 
+          height: "90px",
+          ...style 
+        }}
         data-ad-client="ca-pub-5791689664896394"
         data-ad-slot={slot}
         data-ad-format={format}
@@ -50,38 +54,40 @@ export function GoogleAd({
   );
 }
 
-// 최하단 고정영역 광고 (사각형, 반응형) - 항상 보이므로 바로 로드
+// 최하단 고정영역 광고 (사각형, 반응형)
 export function BottomFixedAd() {
   return (
-    <GoogleAd 
-      slot="2007004200"
-      className="w-full"
-      style={{ display: "block", minHeight: "90px" }}
-    />
-  );
-}
-
-// 중간 배너 광고 (수평형, 반응형) - 단순 버전
-export function MiddleBannerAd() {
-  return (
-    <div className="w-full my-4">
+    <div style={{ width: "100%", minWidth: "320px", minHeight: "90px", padding: "8px" }}>
       <GoogleAd 
-        slot="8793335020"
-        className="w-full"
-        style={{ display: "block", minHeight: "90px" }}
+        slot="2007004200"
+        className=""
+        style={{ display: "block", width: "100%", height: "90px" }}
       />
     </div>
   );
 }
 
-// 우측 스카이스크래퍼 광고 (수직형, 반응형) - 단순 버전
+// 중간 배너 광고 (수평형, 반응형)
+export function MiddleBannerAd() {
+  return (
+    <div style={{ width: "100%", minWidth: "320px", minHeight: "90px", margin: "16px 0", padding: "8px" }}>
+      <GoogleAd 
+        slot="8793335020"
+        className=""
+        style={{ display: "block", width: "100%", height: "90px" }}
+      />
+    </div>
+  );
+}
+
+// 우측 스카이스크래퍼 광고 (수직형, 반응형)
 export function SidebarSkyscraperAd() {
   return (
-    <div className="w-full">
+    <div style={{ width: "100%", minWidth: "160px", minHeight: "600px", padding: "8px" }}>
       <GoogleAd 
         slot="9858709531"
-        className="w-full"
-        style={{ display: "block", minHeight: "600px" }}
+        className=""
+        style={{ display: "block", width: "100%", height: "600px" }}
       />
     </div>
   );

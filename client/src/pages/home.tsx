@@ -9,6 +9,7 @@ import { CulturalContextSelector } from "@/components/cultural-context-selector"
 import { LanguageSelector } from "@/components/language-selector";
 import { UserFeedback } from "@/components/user-feedback";
 import { DebugAdsInfo } from "@/components/debug-ads";
+import { SimpleAdsenseTest } from "@/components/simple-adsense-test";
 import { SeoHead } from "@/components/seo-head";
 import { StructuredData } from "@/components/structured-data";
 import { detectCulturalContext } from "@/lib/cultural-detection";
@@ -252,6 +253,9 @@ export default function Home() {
           </div>
 
           <div className="max-w-4xl mx-auto">
+            {/* 애드센스 테스트 */}
+            <SimpleAdsenseTest />
+
             {/* Google Ad Banner - Before Palm Lines */}
             <div className="mb-8">
               <MiddleBannerAd />
