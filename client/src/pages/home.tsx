@@ -10,6 +10,7 @@ import { LanguageSelector } from "@/components/language-selector";
 import { UserFeedback } from "@/components/user-feedback";
 import { DebugAdsInfo } from "@/components/debug-ads";
 import { SimpleAdsenseTest } from "@/components/simple-adsense-test";
+import { DebugViewport } from "@/components/debug-viewport";
 import { SeoHead } from "@/components/seo-head";
 import { StructuredData } from "@/components/structured-data";
 import { detectCulturalContext } from "@/lib/cultural-detection";
@@ -74,6 +75,7 @@ export default function Home() {
       <SeoHead />
       <StructuredData />
       <DebugAdsInfo />
+      <DebugViewport />
       {/* Ad Sidebar */}
       <AdSidebar />
       
