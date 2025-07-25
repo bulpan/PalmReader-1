@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import i18n from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -30,6 +31,7 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
       formData.append('sessionId', `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
       formData.append('culturalContext', culturalContext);
       formData.append('autoDetected', autoDetected.toString());
+      formData.append('language', i18n.language);
       
       const response = await apiRequest('POST', '/api/analyze-palm', formData);
       return await response.json();

@@ -23,7 +23,7 @@ export function UserFeedback() {
     mutationFn: (data: InsertUserFeedback) => apiRequest("/api/feedback", "POST", data),
     onSuccess: () => {
       toast({
-        title: "감사합니다. 고민해보고 만들어볼께요",
+        title: t('feedbackSuccess'),
       });
       setEmail("");
       setRequest("");
@@ -32,8 +32,8 @@ export function UserFeedback() {
     },
     onError: () => {
       toast({
-        title: "오류가 발생했습니다",
-        description: "다시 시도해주세요",
+        title: t('feedbackError'),
+        description: t('feedbackErrorDesc'),
         variant: "destructive",
       });
     },
@@ -43,7 +43,7 @@ export function UserFeedback() {
     e.preventDefault();
     if (!email || !request) {
       toast({
-        title: "모든 필드를 입력해주세요",
+        title: t('feedbackRequired'),
         variant: "destructive",
       });
       return;
@@ -61,33 +61,33 @@ export function UserFeedback() {
             data-testid="button-feedback"
           >
             <MessageSquare className="w-4 h-4 mr-2" />
-            이런 것도 해줘요
+            {t('feedbackButton')}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]" data-testid="dialog-feedback">
           <DialogHeader>
-            <DialogTitle>의견을 들려주세요</DialogTitle>
+            <DialogTitle>{t('feedbackTitle')}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">이메일 주소</Label>
+              <Label htmlFor="email">{t('feedbackEmail')}</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
+                placeholder={t('feedbackEmailPlaceholder')}
                 required
                 data-testid="input-email"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="request">요청사항</Label>
+              <Label htmlFor="request">{t('feedbackRequest')}</Label>
               <Textarea
                 id="request"
                 value={request}
                 onChange={(e) => setRequest(e.target.value)}
-                placeholder="어떤 기능을 추가하면 좋을까요?"
+                placeholder={t('feedbackRequestPlaceholder')}
                 rows={4}
                 required
                 data-testid="textarea-request"
@@ -100,11 +100,11 @@ export function UserFeedback() {
               data-testid="button-submit-feedback"
             >
               {feedbackMutation.isPending ? (
-                "전송 중..."
+                t('feedbackSending')
               ) : (
                 <>
                   <Send className="w-4 h-4 mr-2" />
-                  의견 보내기
+                  {t('feedbackSubmit')}
                 </>
               )}
             </Button>

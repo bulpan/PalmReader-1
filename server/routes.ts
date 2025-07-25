@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import multer from "multer";
 import { storage } from "./storage";
 import { insertPalmReadingSchema, insertUserFeedbackSchema, type PalmAnalysisResult, type CulturalContext, type InsertUserFeedback } from "@shared/schema";
-import { getCulturalAnalysis } from "./cultural-analysis.js";
+import { getCulturalAnalysis, getHealthAnalysis, getPersonalityAnalysis, getLineDescription, getLineTraits } from "./cultural-analysis.js";
 import { sendEmail } from "./sendgrid.js";
 import { z } from "zod";
 
@@ -23,7 +23,7 @@ const upload = multer({
 });
 
 // Analyze palm lines based on image characteristics and cultural context
-function analyzePalmLines(imageBuffer: Buffer, culturalContext: CulturalContext = 'eastern'): PalmAnalysisResult {
+function analyzePalmLines(imageBuffer: Buffer, culturalContext: CulturalContext = 'eastern', language: string = 'ko'): PalmAnalysisResult {
   // Generate unique characteristics based on image buffer
   // This creates consistent but varied results for different images
   const imageHash = imageBuffer.reduce((acc, byte, index) => (acc + byte * (index + 1)) % 1000000, 0);
@@ -77,64 +77,43 @@ function analyzePalmLines(imageBuffer: Buffer, culturalContext: CulturalContext 
   ];
 
   // Get cultural analysis templates
-  const culturalData = getCulturalAnalysis(culturalContext);
+  const culturalData = getCulturalAnalysis(culturalContext, language);
   const { overallTemplates, loveTemplates, careerTemplates } = culturalData;
 
   const hasFateLine = imageRandom(0, 10) > 3;
   const confidence = imageRandom(82, 97);
   const personalityType = imageHash % 4;
 
-  // Enhanced health analysis based on cultural context
-  const healthAnalysis = culturalContext === 'western' ? 
-    (imageHash % 2 === 0 ? 
-      "Your well-defined life line curves gracefully around the Venus mount, indicating robust physical health and natural vitality. Western palmistry interprets this formation as a sign of strong constitution and excellent resistance to illness. The line's depth suggests good circulation and a naturally optimistic disposition that contributes to overall wellness. You possess the energy and stamina needed for an active, fulfilling lifestyle." :
-      "Your life line shows excellent stability and strength, indicating a naturally healthy constitution with good recovery abilities. The line's clear formation suggests balanced energy levels and effective stress management capabilities. Western palmistry associates this pattern with longevity and the ability to maintain good health through conscious lifestyle choices. Regular exercise and balanced nutrition will enhance your already strong foundation.")
-    : culturalContext === 'indian' ?
-    (imageHash % 2 === 0 ?
-      "आपकी जीवन रेखा की गहराई और स्पष्टता वैदिक आयुर्वेद के अनुसार उत्कृष्ट स्वास्थ्य और प्राकृतिक रोग प्रतिरोधक क्षमता दर्शाती है। सामुद्रिक शास्त्र में इसे 'आयुष्य बल योग' कहा गया है। आपके हाथ में दिखाई दे रहे त्रिदोष संतुलन के चिह्न बताते हैं कि आप जीवन भर अच्छे स्वास्थ्य का आनंद उठाएंगे। प्राणायाम और योग के माध्यम से आप अपनी जीवन शक्ति को और भी बढ़ा सकते हैं।" :
-      "आपकी जीवन रेखा का स्थिर प्रवाह भारतीय चिकित्सा विज्ञान के अनुसार संतुलित प्राण ऊर्जा और मजबूत रोग प्रतिरोधक क्षमता का प्रतीक है। आपके हाथ में स्वास्थ्य रेखा की उपस्थिति बताती है कि आप प्राकृतिक चिकित्सा और आयुर्वेदिक उपचारों से विशेष लाभ उठा सकते हैं। तनाव प्रबंधन और पर्याप्त विश्राम से आप अपनी जीवन शक्ति को बनाए रख सकते हैं।")
-    : // Eastern
-    (imageHash % 2 === 0 ? 
-      "생명선이 길고 뚜렷하여 전반적으로 건강한 삶을 누릴 것입니다. 동양 수상학에서 이러한 생명선을 '장수지상(長壽之相)'이라 하여 매우 길한 것으로 봅니다. 오행으로 보면 당신은 목(木)과 화(火)의 기운이 조화롭게 배치되어 있어 자연 치유력이 강하고 질병에 대한 저항력이 뛰어납니다. 규칙적인 운동과 균형 잡힌 식단으로 더욱 건강한 삶을 유지하세요." :
-      "생명선이 안정적으로 나타나 건강한 체질을 가지고 있습니다. 동양 의학에서 말하는 기혈(氣血) 순환이 원활하여 몸의 균형이 잘 잡혀 있는 상태입니다. 손바닥의 색깔과 윤기로 보아 면역력이 강하고 스트레스에 대한 적응력도 뛰어납니다. 충분한 휴식과 명상을 통해 더욱 활력 넘치는 삶을 살 수 있습니다.");
+  // Enhanced health analysis based on cultural context and language
+  const healthTemplates = getHealthAnalysis(culturalContext, language);
+  const healthAnalysis = imageChoice(healthTemplates);
 
   return {
     overall: imageChoice(overallTemplates),
     loveLife: imageChoice(loveTemplates, 1),
     career: imageChoice(careerTemplates, 2),
     health: healthAnalysis,
-    personality: personalityType === 0 ?
-      "두뇌선이 곡선을 그려 창의적이고 직감적인 성향을 보입니다. 예술적 감각이 뛰어나며 독창적인 아이디어를 많이 갖고 있습니다." :
-      personalityType === 1 ?
-      "두뇌선이 직선적으로 나타나 논리적이고 분석적인 사고를 선호합니다. 체계적인 접근으로 문제를 해결하는 능력이 뛰어납니다." :
-      personalityType === 2 ?
-      "두뇌선이 적당한 곡선을 이루며 균형잡힌 사고방식을 가지고 있습니다. 감성과 이성을 조화롭게 활용하는 지혜로운 분입니다." :
-      "두뇌선이 깊고 명확하여 집중력과 의지력이 강한 분입니다. 한번 결정한 일은 끝까지 해내는 끈기가 있습니다.",
+    personality: getPersonalityAnalysis(personalityType, culturalContext, language),
     lines: {
       heartLine: {
         present: true,
-        description: imageRandom(0, 3) === 0 ? "감정선이 명확하고 길게 나타남" : 
-                    imageRandom(0, 3) === 1 ? "감정선이 깊고 안정적으로 나타남" : "감정선이 곡선을 그리며 부드럽게 나타남",
-        traits: [imageChoice(heartLineTraits, 3), imageChoice(heartLineTraits, 7)]
+        description: getLineDescription('heart', imageRandom(0, 3), language),
+        traits: getLineTraits('heart', language, [3, 7].map(offset => (imageHash + offset * 31) % 8))
       },
       headLine: {
         present: true,
-        description: imageRandom(0, 3) === 0 ? "두뇌선이 적당한 곡선을 이루며 뚜렷함" : 
-                    imageRandom(0, 3) === 1 ? "두뇌선이 직선적이고 명확하게 나타남" : "두뇌선이 깊고 연속적으로 나타남",
-        traits: [imageChoice(headLineTraits, 11), imageChoice(headLineTraits, 13)]
+        description: getLineDescription('head', imageRandom(0, 3), language),
+        traits: getLineTraits('head', language, [11, 13].map(offset => (imageHash + offset * 31) % 8))
       },
       lifeLine: {
         present: true,
-        description: imageRandom(0, 3) === 0 ? "생명선이 깊고 연속적으로 나타남" : 
-                    imageRandom(0, 3) === 1 ? "생명선이 길고 안정적으로 나타남" : "생명선이 선명하고 활력 있게 나타남",
-        traits: [imageChoice(lifeLineTraits, 17), imageChoice(lifeLineTraits, 19)]
+        description: getLineDescription('life', imageRandom(0, 3), language),
+        traits: getLineTraits('life', language, [17, 19].map(offset => (imageHash + offset * 31) % 8))
       },
       fateLine: {
         present: hasFateLine,
-        description: hasFateLine ? 
-          (imageRandom(0, 2) === 0 ? "운명선이 뚜렷하게 나타남" : "운명선이 길고 명확하게 나타남") :
-          (imageRandom(0, 2) === 0 ? "운명선이 희미하거나 부분적으로 나타남" : "운명선이 짧게 나타남"),
-        traits: [imageChoice(fateLineTraits, 23), imageChoice(fateLineTraits, 29)]
+        description: getLineDescription('fate', hasFateLine ? imageRandom(0, 2) : imageRandom(2, 4), language),
+        traits: getLineTraits('fate', language, [23, 29].map(offset => (imageHash + offset * 31) % 8))
       }
     },
     confidence,
@@ -160,8 +139,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const culturalContext = (req.body.culturalContext as CulturalContext) || 'eastern';
       const autoDetected = req.body.autoDetected === 'true';
       
-      // Analyze palm lines with cultural context
-      const analysisResult = analyzePalmLines(req.file.buffer, culturalContext);
+      // Get language from request
+      const language = req.body.language || 'ko';
+      
+      // Analyze palm lines with cultural context and language
+      const analysisResult = analyzePalmLines(req.file.buffer, culturalContext, language);
       analysisResult.autoDetected = autoDetected;
       
       // Save to storage

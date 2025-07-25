@@ -1,5 +1,12 @@
 import type { CulturalContext } from "@shared/schema";
 
+// Multi-language content structures
+interface CulturalData {
+  overallTemplates: string[];
+  loveTemplates: string[];
+  careerTemplates: string[];
+}
+
 // 문화권별 분석 데이터
 export const CULTURAL_ANALYSIS = {
   western: {
@@ -87,6 +94,206 @@ export const CULTURAL_ANALYSIS = {
   }
 };
 
-export function getCulturalAnalysis(context: CulturalContext) {
-  return CULTURAL_ANALYSIS[context] || CULTURAL_ANALYSIS.eastern;
+// Multi-language templates for Western palmistry
+const WESTERN_ANALYSIS_EN = {
+  overallTemplates: [
+    "Your palm reveals a fascinating tapestry of personality traits rooted in Western palmistry traditions. The prominent heart line indicates you approach love with deep sincerity and emotional intelligence, suggesting a natural ability to form profound, meaningful relationships throughout your life journey. Your hand structure shows a blend of Fire and Water elements, indicating passionate yet intuitive nature. The spacing between your fingers reveals an open-minded approach to life, while the flexibility of your thumb suggests adaptability in challenging situations. The overall harmony between your major lines indicates a well-balanced individual who can successfully navigate both emotional and practical aspects of life.",
+    "According to Western chirognomy principles, you possess a remarkably harmonious character that naturally earns trust and respect from those around you. Your strong, well-defined life line curves gracefully around the Venus mount, indicating not only robust physical health but also a vibrant, energetic approach to life's challenges. The depth and clarity of your lines suggest strong vital energy and resilience. Your palm's texture and color indicate good circulation and a naturally optimistic disposition. The presence of minor lines supporting your major ones shows additional talents and interests that will enrich your life experience. This combination suggests you will lead a long, healthy, and remarkably fulfilling life."
+  ],
+  loveTemplates: [
+    "Your heart line's distinctive starting point below the index finger reveals a fascinating aspect of your romantic nature according to Western palmistry traditions. This placement indicates you naturally take a leading, confident role in romantic relationships, showing initiative in matters of the heart while maintaining genuine sincerity. The line's curve and depth suggest you possess strong emotional intelligence and the ability to understand your partner's needs intuitively.",
+    "The remarkable length and impressive depth of your heart line tell a compelling story about your approach to love and relationships. In Western palmistry, such a well-defined heart line indicates not only serious dedication to romantic partners but also the emotional maturity to sustain deep, meaningful connections."
+  ],
+  careerTemplates: [
+    "A clear fate line indicates goal-oriented nature with high potential for success. You can achieve great results in creative fields or arts-related businesses.",
+    "Strong leadership and excellent drive suggest you will take important roles in organizations. You can excel in management or business positions."
+  ]
+};
+
+// Helper functions for multi-language support
+export function getCulturalAnalysis(context: CulturalContext, language: string = 'ko'): CulturalData {
+  if (language === 'en' && context === 'western') {
+    return WESTERN_ANALYSIS_EN;
+  }
+  return CULTURAL_ANALYSIS[context];
 }
+
+export function getHealthAnalysis(context: CulturalContext, language: string = 'ko'): string[] {
+  if (language === 'en') {
+    return [
+      "Your well-defined life line curves gracefully around the Venus mount, indicating robust physical health and natural vitality. Western palmistry interprets this formation as a sign of strong constitution and excellent resistance to illness.",
+      "Your life line shows excellent stability and strength, indicating a naturally healthy constitution with good recovery abilities. The line's clear formation suggests balanced energy levels and effective stress management capabilities."
+    ];
+  }
+  return [
+    "생명선이 길고 뚜렷하여 전반적으로 건강한 삶을 누릴 것입니다. 동양 수상학에서 이러한 생명선을 '장수지상(長壽之相)'이라 하여 매우 길한 것으로 봅니다.",
+    "생명선이 안정적으로 나타나 건강한 체질을 가지고 있습니다. 동양 의학에서 말하는 기혈(氣血) 순환이 원활하여 몸의 균형이 잘 잡혀 있는 상태입니다."
+  ];
+}
+
+export function getPersonalityAnalysis(type: number, context: CulturalContext, language: string = 'ko'): string {
+  if (language === 'en') {
+    const personalities = [
+      "Your head line curves gracefully, showing creative and intuitive tendencies. You possess excellent artistic sense and many original ideas.",
+      "Your head line appears straight, indicating logical and analytical thinking preferences. You excel at systematic problem-solving approaches.",
+      "Your head line forms a moderate curve, showing balanced thinking patterns. You wisely harmonize emotion and reason.",
+      "Your head line is deep and clear, indicating strong concentration and willpower. You have the persistence to see things through to completion."
+    ];
+    return personalities[type];
+  }
+  
+  const personalities = [
+    "두뇌선이 곡선을 그려 창의적이고 직감적인 성향을 보입니다. 예술적 감각이 뛰어나며 독창적인 아이디어를 많이 갖고 있습니다.",
+    "두뇌선이 직선적으로 나타나 논리적이고 분석적인 사고를 선호합니다. 체계적인 접근으로 문제를 해결하는 능력이 뛰어납니다.",
+    "두뇌선이 적당한 곡선을 이루며 균형잡힌 사고방식을 가지고 있습니다. 감성과 이성을 조화롭게 활용하는 지혜로운 분입니다.",
+    "두뇌선이 깊고 명확하여 집중력과 의지력이 강한 분입니다. 한번 결정한 일은 끝까지 해내는 끈기가 있습니다."
+  ];
+  return personalities[type];
+}
+
+export function getLineDescription(lineType: string, variation: number, language: string = 'ko'): string {
+  if (language === 'en') {
+    const descriptions = {
+      heart: [
+        "Heart line appears clear and long",
+        "Heart line is deep and stable",
+        "Heart line curves gracefully and softly"
+      ],
+      head: [
+        "Head line forms a moderate curve and is distinct",
+        "Head line is straight and clear",
+        "Head line is deep and continuous"
+      ],
+      life: [
+        "Life line appears distinct and deep",
+        "Life line is long and curves gracefully",
+        "Life line is stable and clear"
+      ],
+      fate: [
+        "Fate line appears distinctly",
+        "Fate line is long and clear",
+        "Fate line is faint or partial",
+        "Fate line appears short"
+      ]
+    };
+    return descriptions[lineType][variation] || descriptions[lineType][0];
+  }
+  
+  const descriptions = {
+    heart: [
+      "감정선이 명확하고 길게 나타남",
+      "감정선이 깊고 안정적으로 나타남", 
+      "감정선이 곡선을 그리며 부드럽게 나타남"
+    ],
+    head: [
+      "두뇌선이 적당한 곡선을 이루며 뚜렷함",
+      "두뇌선이 직선적이고 명확하게 나타남",
+      "두뇌선이 깊고 연속적으로 나타남"
+    ],
+    life: [
+      "생명선이 뚜렷하고 깊게 나타남",
+      "생명선이 길고 곡선을 그리며 나타남",
+      "생명선이 안정적이고 명확하게 나타남"
+    ],
+    fate: [
+      "운명선이 뚜렷하게 나타남",
+      "운명선이 길고 명확하게 나타남",
+      "운명선이 희미하거나 부분적으로 나타남",
+      "운명선이 짧게 나타남"
+    ]
+  };
+  return descriptions[lineType][variation] || descriptions[lineType][0];
+}
+
+export function getLineTraits(lineType: string, language: string = 'ko', indices: number[]): string[] {
+  if (language === 'en') {
+    const traits = {
+      heart: [
+        "Satisfied love life tendency",
+        "True and devoted to love",
+        "Free emotional expression",
+        "Values romantic relationships",
+        "Seeks deep affection",
+        "Values stability in relationships",
+        "Cherishes emotional bonds",
+        "Dreams of ideal love"
+      ],
+      head: [
+        "Creative and intuitive thinking",
+        "Practical problem-solving ability",
+        "Excellent concentration",
+        "Prefers analytical thinking",
+        "Logical and systematic thinking",
+        "Rich in original ideas",
+        "Excellent learning ability",
+        "Enjoys detailed planning"
+      ],
+      life: [
+        "Full of vitality and energy",
+        "High possibility of healthy living",
+        "Strong life force and stamina",
+        "Adapts well to changes",
+        "Strong natural healing power",
+        "Excellent stress management ability",
+        "High possibility of longevity",
+        "Prefers active lifestyle"
+      ],
+      fate: [
+        "Goal-oriented with strong will",
+        "Well influenced by external environment",
+        "Experiences important life changes",
+        "Self-made type tendency",
+        "Excellent leadership ability",
+        "Not afraid of challenges",
+        "Many fateful encounters",
+        "High possibility of social success"
+      ]
+    };
+    return indices.map(i => traits[lineType][i % traits[lineType].length]);
+  }
+  
+  const traits = {
+    heart: [
+      "연애 생활에 만족감을 느끼는 성향",
+      "사랑에 대해 진실하고 헌신적",
+      "감정 표현이 자유로움",
+      "로맨틱한 관계를 중시함",
+      "깊은 애정을 추구하는 성향",
+      "관계에서 안정성을 중요시함",
+      "정서적 유대감을 소중히 여김",
+      "이상적인 사랑을 꿈꾸는 타입"
+    ],
+    head: [
+      "창의적이고 직감적인 사고",
+      "실용적인 문제 해결 능력",
+      "집중력이 뛰어남",
+      "분석적 사고를 선호함",
+      "논리적이고 체계적인 사고",
+      "독창적인 아이디어가 풍부함",
+      "학습 능력이 뛰어남",
+      "세밀한 계획을 세우는 것을 좋아함"
+    ],
+    life: [
+      "활력이 넘치고 에너지가 풍부",
+      "건강한 삶을 누릴 가능성이 높음",
+      "강한 생명력과 체력",
+      "변화에 잘 적응함",
+      "자연 치유력이 강함",
+      "스트레스 관리 능력이 뛰어남",
+      "장수할 가능성이 높음",
+      "활동적인 생활을 선호함"
+    ],
+    fate: [
+      "목표 지향적이고 의지가 강함",
+      "외부 환경에 영향을 잘 받음",
+      "인생에서 중요한 변화를 경험",
+      "자수성가형의 성향",
+      "리더십 능력이 뛰어남",
+      "도전을 두려워하지 않음",
+      "운명적인 만남이 많음",
+      "사회적 성공 가능성이 높음"
+    ]
+  };
+  return indices.map(i => traits[lineType][i % traits[lineType].length]);
+}
+
