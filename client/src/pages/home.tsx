@@ -8,9 +8,6 @@ import { MiddleBannerAd } from "@/components/google-adsense";
 import { CulturalContextSelector } from "@/components/cultural-context-selector";
 import { LanguageSelector } from "@/components/language-selector";
 import { UserFeedback } from "@/components/user-feedback";
-import { DebugAdsInfo } from "@/components/debug-ads";
-import { SimpleAdsenseTest } from "@/components/simple-adsense-test";
-import { DebugViewport } from "@/components/debug-viewport";
 import { SeoHead } from "@/components/seo-head";
 import { StructuredData } from "@/components/structured-data";
 import { detectCulturalContext } from "@/lib/cultural-detection";
@@ -74,8 +71,7 @@ export default function Home() {
     <div className="bg-gradient-to-b from-mystic-50 to-white dark:from-mystic-900 dark:to-mystic-800 transition-colors duration-300">
       <SeoHead />
       <StructuredData />
-      <DebugAdsInfo />
-      <DebugViewport />
+
       {/* Ad Sidebar */}
       <AdSidebar />
       
@@ -255,9 +251,6 @@ export default function Home() {
           </div>
 
           <div className="max-w-4xl mx-auto">
-            {/* 애드센스 테스트 */}
-            <SimpleAdsenseTest />
-
             {/* Google Ad Banner - Before Palm Lines */}
             <div className="mb-8">
               <MiddleBannerAd />
