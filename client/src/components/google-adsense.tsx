@@ -21,11 +21,10 @@ export function GoogleAd({
   style = { display: "block" },
   className = "" 
 }: GoogleAdProps) {
-  const adRef = useRef<HTMLElement>(null);
   const [hasInitialized, setHasInitialized] = useState(false);
 
   useEffect(() => {
-    if (!hasInitialized && adRef.current) {
+    if (!hasInitialized) {
       try {
         if (typeof window !== "undefined" && window.adsbygoogle) {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -40,7 +39,6 @@ export function GoogleAd({
   return (
     <div className={className}>
       <ins 
-        ref={adRef}
         className="adsbygoogle"
         style={style}
         data-ad-client="ca-pub-5791689664896394"
