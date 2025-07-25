@@ -15,12 +15,47 @@ export function BottomAdBanner() {
   useEffect(() => {
     if (!isVisible) return;
     
-    // 가장 단순한 버전
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (error) {
-      console.error("AdSense error:", error);
-    }
+    // 하단 광고만을 위한 별도 처리 (중복 방지)
+    const bottomSlot = "2007004200";
+    
+    const timer = setTimeout(() => {
+      // 하단 광고 슬롯이 이미 처리되었는지 확인
+      const existingBottomAds = document.querySelectorAll(`[data-ad-slot="${bottomSlot}"]`);
+      const processedAds = Array.from(existingBottomAds).filter(ad => 
+        ad.innerHTML.trim().length > 0 || ad.getAttribute('data-ad-status') === 'filled'
+      );
+
+      if (processedAds.length > 0) {
+        console.log('✅ 하단 광고 이미 로드됨, 스킵');
+        return;
+      }
+
+      const adContainer = document.querySelector('.bottom-ad-container');
+      if (adContainer) {
+        const rect = adContainer.getBoundingClientRect();
+        const computed = window.getComputedStyle(adContainer as HTMLElement);
+        
+        console.log('🔍 하단 광고 최종 검증:', {
+          크기: `${rect.width}x${rect.height}`,
+          가시성: computed.visibility,
+          투명도: computed.opacity,
+          Z인덱스: computed.zIndex
+        });
+        
+        if (rect.width > 300 && rect.height > 50 && 
+            computed.visibility !== 'hidden' && 
+            parseFloat(computed.opacity) > 0) {
+          try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            console.log('🎯 하단 광고 로드 완료');
+          } catch (error) {
+            console.error("❌ 하단 광고 최종 에러:", error);
+          }
+        }
+      }
+    }, 800);
+
+    return () => clearTimeout(timer);
   }, [isVisible]);
 
   if (!isVisible) {
@@ -41,13 +76,27 @@ export function BottomAdBanner() {
           <X className="w-3 h-3" />
         </Button>
 
-        {/* Google AdSense Ad - 최단 단순 버전 */}
-        <div className="w-full px-4 py-2">
+        {/* 해결책: 명시적 크기 지정 + 클래스 추가 */}
+        <div 
+          className="bottom-ad-container w-full px-4 py-2"
+          style={{ 
+            minWidth: '320px', 
+            minHeight: '90px',
+            width: '100%',
+            display: 'block'
+          }}
+        >
           <ins 
             className="adsbygoogle"
-            style={{ display: 'block' }}
+            style={{ 
+              display: 'block',
+              width: '100%',
+              minWidth: '320px',
+              height: '90px'
+            }}
             data-ad-client="ca-pub-5791689664896394"
             data-ad-slot="2007004200"
+            data-ad-format="rectangle"
           />
         </div>
       </div>

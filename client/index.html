@@ -59,6 +59,45 @@
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5791689664896394" crossorigin="anonymous"></script>
+    
+    <!-- AdSense 초기화 스크립트 -->
+    <script>
+      // 전역 애드센스 관리자
+      window.adsenseManager = {
+        loadedSlots: new Set(),
+        isInitialized: false,
+        
+        // 광고 로드 (중복 방지)
+        loadAd: function(slotId) {
+          if (this.loadedSlots.has(slotId)) {
+            console.log(`🔄 슬롯 ${slotId} 이미 로드됨`);
+            return false;
+          }
+          
+          try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            this.loadedSlots.add(slotId);
+            console.log(`✅ 슬롯 ${slotId} 로드 성공`);
+            return true;
+          } catch (error) {
+            console.error(`❌ 슬롯 ${slotId} 로드 실패:`, error);
+            return false;
+          }
+        },
+        
+        // 페이지 새로고침 감지
+        reset: function() {
+          this.loadedSlots.clear();
+          this.isInitialized = false;
+          console.log('🔄 애드센스 상태 초기화');
+        }
+      };
+      
+      // 페이지 새로고침 시 상태 초기화
+      window.addEventListener('beforeunload', () => {
+        window.adsenseManager.reset();
+      });
+    </script>
   </head>
   <body>
 
