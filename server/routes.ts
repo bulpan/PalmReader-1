@@ -4,7 +4,7 @@ import multer from "multer";
 import { storage } from "./storage";
 import { insertPalmReadingSchema, insertUserFeedbackSchema, type PalmAnalysisResult, type CulturalContext, type InsertUserFeedback } from "@shared/schema";
 import { getCulturalAnalysis, getHealthAnalysis, getPersonalityAnalysis, getLineDescription, getLineTraits } from "./cultural-analysis.js";
-import { sendEmail } from "./sendgrid.js";
+import { sendEmail } from "./sendgrid";
 import { z } from "zod";
 
 // Configure multer for file uploads
@@ -190,6 +190,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertUserFeedbackSchema.parse(req.body);
       const result = await storage.createUserFeedback(validatedData);
+      
+      // Send email notification
+      await sendEmail({
+        to: "andipark2015@gmail.com",
+        from: "noreply@palmmystic.com",
+        subject: "새로운 피드백이 도착했습니다",
+        html: `
+          <h2>새로운 피드백</h2>
+          <p><strong>이메일:</strong> ${result.email}</p>
+          <p><strong>요청사항:</strong> ${result.request}</p>
+          <p><strong>제출시간:</strong> ${new Date().toLocaleString('ko-KR')}</p>
+        `
+      });
+      
       res.json(result);
     } catch (error) {
       console.error('Error creating feedback:', error);

@@ -112,8 +112,26 @@ const WESTERN_ANALYSIS_EN = {
 
 // Helper functions for multi-language support
 export function getCulturalAnalysis(context: CulturalContext, language: string = 'ko'): CulturalData {
-  if (language === 'en' && context === 'western') {
-    return WESTERN_ANALYSIS_EN;
+  // Add English support for all contexts
+  if (language === 'en') {
+    if (context === 'western') {
+      return WESTERN_ANALYSIS_EN;
+    }
+    // For eastern and indian contexts in English, provide English translations
+    return {
+      overallTemplates: [
+        "According to Eastern palmistry traditions, your palm reveals extraordinary potential for a harmonious and successful life. The configuration of your major lines indicates a person blessed with both emotional depth and practical wisdom. Your hand shape suggests a naturally balanced personality that can adapt to various life circumstances with grace and confidence.",
+        "Your palm shows the classic signs of a person destined for meaningful relationships and professional success. The clarity and depth of your lines indicate strong vital energy and natural resilience that will serve you well throughout life."
+      ],
+      loveTemplates: [
+        "Your heart line indicates you are naturally sincere and devoted in matters of love. You have the ability to form deep, lasting emotional bonds with your romantic partners.",
+        "The formation of your heart line suggests you approach relationships with both passion and wisdom, creating meaningful connections that stand the test of time."
+      ],
+      careerTemplates: [
+        "Your fate line indicates strong goal-oriented nature with excellent potential for professional success. You have natural leadership abilities that will serve you well in your career.",
+        "The characteristics of your hand suggest you will excel in fields that require both creativity and analytical thinking."
+      ]
+    };
   }
   return CULTURAL_ANALYSIS[context];
 }
@@ -153,7 +171,7 @@ export function getPersonalityAnalysis(type: number, context: CulturalContext, l
 
 export function getLineDescription(lineType: string, variation: number, language: string = 'ko'): string {
   if (language === 'en') {
-    const descriptions = {
+    const descriptions: Record<string, string[]> = {
       heart: [
         "Heart line appears clear and long",
         "Heart line is deep and stable",
@@ -176,10 +194,10 @@ export function getLineDescription(lineType: string, variation: number, language
         "Fate line appears short"
       ]
     };
-    return descriptions[lineType][variation] || descriptions[lineType][0];
+    return descriptions[lineType]?.[variation] || descriptions[lineType]?.[0] || "";
   }
   
-  const descriptions = {
+  const descriptions: Record<string, string[]> = {
     heart: [
       "감정선이 명확하고 길게 나타남",
       "감정선이 깊고 안정적으로 나타남", 
@@ -202,12 +220,12 @@ export function getLineDescription(lineType: string, variation: number, language
       "운명선이 짧게 나타남"
     ]
   };
-  return descriptions[lineType][variation] || descriptions[lineType][0];
+  return descriptions[lineType]?.[variation] || descriptions[lineType]?.[0] || "";
 }
 
 export function getLineTraits(lineType: string, language: string = 'ko', indices: number[]): string[] {
   if (language === 'en') {
-    const traits = {
+    const traits: Record<string, string[]> = {
       heart: [
         "Satisfied love life tendency",
         "True and devoted to love",
@@ -249,10 +267,11 @@ export function getLineTraits(lineType: string, language: string = 'ko', indices
         "High possibility of social success"
       ]
     };
-    return indices.map(i => traits[lineType][i % traits[lineType].length]);
+    const lineTraits = traits[lineType] || [];
+    return indices.map(i => lineTraits[i % lineTraits.length] || "");
   }
   
-  const traits = {
+  const traits: Record<string, string[]> = {
     heart: [
       "연애 생활에 만족감을 느끼는 성향",
       "사랑에 대해 진실하고 헌신적",
@@ -294,6 +313,7 @@ export function getLineTraits(lineType: string, language: string = 'ko', indices
       "사회적 성공 가능성이 높음"
     ]
   };
-  return indices.map(i => traits[lineType][i % traits[lineType].length]);
+  const lineTraits = traits[lineType] || [];
+  return indices.map(i => lineTraits[i % lineTraits.length] || "");
 }
 

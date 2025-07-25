@@ -1,8 +1,4 @@
-import sgMail from '@sendgrid/mail';
-
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
+import * as sgMail from '@sendgrid/mail';
 
 interface EmailParams {
   to: string;
@@ -14,11 +10,15 @@ interface EmailParams {
 
 export async function sendEmail(params: EmailParams): Promise<boolean> {
   try {
-    if (!process.env.SENDGRID_API_KEY) {
-      console.error('SENDGRID_API_KEY not configured');
+    // Check if API key is available
+    const apiKey = process.env.SENDGRID_API_KEY;
+    if (!apiKey) {
+      console.log('SENDGRID_API_KEY not configured, skipping email send');
       return false;
     }
 
+    sgMail.setApiKey(apiKey);
+    
     await sgMail.send({
       to: params.to,
       from: params.from,
@@ -27,7 +27,6 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
       html: params.html,
     });
     
-    console.log('Email sent successfully to:', params.to);
     return true;
   } catch (error) {
     console.error('SendGrid email error:', error);

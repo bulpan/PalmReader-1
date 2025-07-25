@@ -20,7 +20,10 @@ export function UserFeedback() {
   const [request, setRequest] = useState("");
 
   const feedbackMutation = useMutation({
-    mutationFn: (data: InsertUserFeedback) => apiRequest("/api/feedback", "POST", data),
+    mutationFn: async (data: InsertUserFeedback) => {
+      const response = await apiRequest('POST', '/api/feedback', data);
+      return response.json();
+    },
     onSuccess: () => {
       toast({
         title: t('feedbackSuccess'),
