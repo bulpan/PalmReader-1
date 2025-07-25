@@ -2,7 +2,8 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Briefcase, Activity, User, Share, Download, Twitter, RotateCcw } from "lucide-react";
+import { Heart, Briefcase, Activity, User, Share, Download, Twitter, RotateCcw, Globe } from "lucide-react";
+import { getCulturalDisplayName } from "@/lib/cultural-detection";
 import type { PalmAnalysisResult } from "@shared/schema";
 
 interface PalmAnalysisResultProps {
@@ -58,10 +59,20 @@ ${t('confidence')}: ${result.confidence}%
         <h2 className="font-display text-4xl md:text-5xl font-bold text-mystic-purple dark:text-mystic-gold mb-6">
           {t('yourFortune')}
         </h2>
-        <p className="text-lg text-mystic-600 dark:text-mystic-300">
+        <p className="text-lg text-mystic-600 dark:text-mystic-300 mb-4">
           {t('fortuneDescription')}
         </p>
-        <Badge variant="secondary" className="mt-4">
+        {/* Cultural Context Display */}
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <Globe className="w-4 h-4 text-mystic-500" />
+          <Badge variant="outline" className="text-xs">
+            {getCulturalDisplayName(result.culturalContext)}
+            {result.autoDetected && (
+              <span className="ml-1 text-mystic-400">({t('autoDetected')})</span>
+            )}
+          </Badge>
+        </div>
+        <Badge variant="secondary" className="mt-2">
           {t('confidence')}: {result.confidence}%
         </Badge>
       </div>

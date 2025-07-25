@@ -72,5 +72,11 @@
   "faq": "자주 묻는 질문",
   "privacy": "개인정보처리방침",
   "terms": "이용약관",
-  "footerDescription": "고대의 지혜와 현대의 기술이 만나 당신의 손바닥에서 미래를 읽어드립니다. 재미와 통찰을 동시에 얻어가세요."
+  "footerDescription": "고대의 지혜와 현대의 기술이 만나 당신의 손바닥에서 미래를 읽어드립니다. 재미와 통찰을 동시에 얻어가세요.",
+  "culturalContext": "문화권 분석",
+  "westernTradition": "서양 수상학",
+  "easternTradition": "동양 수상학", 
+  "indianTradition": "인도 수상학",
+  "autoDetected": "자동 감지",
+  "changeContext": "문화권 변경"
 }

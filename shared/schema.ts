@@ -32,6 +32,8 @@ export type User = typeof users.$inferSelect;
 export type InsertPalmReading = z.infer<typeof insertPalmReadingSchema>;
 export type PalmReading = typeof palmReadings.$inferSelect;
 
+export type CulturalContext = 'western' | 'eastern' | 'indian';
+
 export interface PalmAnalysisResult {
   overall: string;
   loveLife: string;
@@ -45,4 +47,6 @@ export interface PalmAnalysisResult {
     fateLine: { present: boolean; description: string; traits: string[] };
   };
   confidence: number;
+  culturalContext: CulturalContext;
+  autoDetected: boolean;
 }

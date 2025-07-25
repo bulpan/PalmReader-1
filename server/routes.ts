@@ -2,7 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import multer from "multer";
 import { storage } from "./storage";
-import { insertPalmReadingSchema, type PalmAnalysisResult } from "@shared/schema";
+import { insertPalmReadingSchema, type PalmAnalysisResult, type CulturalContext } from "@shared/schema";
+import { getCulturalAnalysis } from "./cultural-analysis.js";
 import { z } from "zod";
 
 // Configure multer for file uploads
@@ -20,8 +21,8 @@ const upload = multer({
   },
 });
 
-// Analyze palm lines based on image characteristics
-function analyzePalmLines(imageBuffer: Buffer): PalmAnalysisResult {
+// Analyze palm lines based on image characteristics and cultural context
+function analyzePalmLines(imageBuffer: Buffer, culturalContext: CulturalContext = 'eastern'): PalmAnalysisResult {
   // Generate unique characteristics based on image buffer
   // This creates consistent but varied results for different images
   const imageHash = imageBuffer.reduce((acc, byte, index) => (acc + byte * (index + 1)) % 1000000, 0);
@@ -74,33 +75,9 @@ function analyzePalmLines(imageBuffer: Buffer): PalmAnalysisResult {
     "사회적 성공 가능성이 높음"
   ];
 
-  const overallTemplates = [
-    "당신은 강한 직감력과 창의성을 가진 분입니다. 감정선의 특성으로 보아 사랑에 대해 진실하며, 인생에서 의미 있는 관계들을 만들어갈 것입니다.",
-    "균형잡힌 성격으로 주변 사람들에게 신뢰받는 분입니다. 생명선이 강하여 건강하고 활력 넘치는 삶을 살아갈 것으로 보입니다.",
-    "예술적 감성과 논리적 사고를 모두 갖춘 조화로운 성격입니다. 두뇌선의 특성상 창의적인 분야에서 큰 성취를 이룰 가능성이 높습니다.",
-    "타고난 리더십과 강한 의지력을 가진 분입니다. 운명선이 뚜렷하여 목표하는 바를 이루어낼 가능성이 매우 높습니다.",
-    "따뜻한 마음과 깊은 사고력을 겸비한 분입니다. 감정선과 두뇌선의 조화로 인간관계에서도 성공할 것으로 보입니다.",
-    "독립적이고 진취적인 성향을 가진 분입니다. 자신만의 길을 개척해 나가는 능력이 뛰어납니다.",
-    "세심하고 배려심 깊은 성격으로 주변 사람들에게 큰 도움이 되는 분입니다. 치유와 봉사의 능력을 가지고 있습니다."
-  ];
-
-  const loveTemplates = [
-    "감정선이 검지 아래에서 시작되어 연애에서 주도적인 역할을 하는 성향입니다. 진실한 마음으로 상대방을 대하면 깊은 사랑을 만날 수 있습니다.",
-    "감정선의 길이와 깊이로 보아 사랑에 진지하고 헌신적인 모습을 보일 것입니다. 이상적인 파트너와의 만남이 기다리고 있습니다.",
-    "로맨틱한 성향이 강하며 감정 표현이 풍부한 타입입니다. 상대방에 대한 배려심이 깊어 행복한 연애를 할 가능성이 높습니다.",
-    "안정적이고 지속적인 관계를 선호하는 성향입니다. 한번 마음을 정하면 변하지 않는 진실한 사랑을 보여줄 것입니다.",
-    "감정의 기복이 적고 균형잡힌 사랑을 추구합니다. 서로를 이해하고 존중하는 성숙한 관계를 만들어갈 것입니다.",
-    "열정적이고 솔직한 사랑을 추구하는 타입입니다. 감정 표현이 자유롭고 상대방에게 진심을 전달하는 능력이 뛰어납니다."
-  ];
-
-  const careerTemplates = [
-    "운명선이 뚜렷하여 목표 지향적이며 성공 가능성이 높습니다. 창의적 분야나 예술 관련 사업에서 큰 성과를 거둘 수 있습니다.",
-    "리더십이 강하고 추진력이 뛰어나 조직에서 중요한 역할을 맡게 될 것입니다. 관리직이나 경영 분야에서 두각을 나타낼 수 있습니다.",
-    "세밀하고 분석적인 사고력을 바탕으로 전문직에서 성공할 가능성이 높습니다. 지속적인 학습으로 더욱 발전할 수 있습니다.",
-    "사람들과의 소통 능력이 뛰어나 서비스업이나 교육 분야에서 성공할 것입니다. 타인을 도우는 일에서 보람을 느낄 것입니다.",
-    "창의적 아이디어가 풍부하여 새로운 분야 개척에 적합합니다. 혁신적인 사업이나 기술 분야에서 두각을 나타낼 수 있습니다.",
-    "꼼꼼하고 책임감이 강하여 전문 기술직에서 성공할 가능성이 높습니다. 정확성을 요구하는 분야에서 뛰어난 능력을 발휘할 것입니다."
-  ];
+  // Get cultural analysis templates
+  const culturalData = getCulturalAnalysis(culturalContext);
+  const { overallTemplates, loveTemplates, careerTemplates } = culturalData;
 
   const hasFateLine = imageRandom(0, 10) > 3;
   const confidence = imageRandom(82, 97);
@@ -147,7 +124,9 @@ function analyzePalmLines(imageBuffer: Buffer): PalmAnalysisResult {
         traits: [imageChoice(fateLineTraits, 23), imageChoice(fateLineTraits, 29)]
       }
     },
-    confidence
+    confidence,
+    culturalContext,
+    autoDetected: true
   };
 }
 
@@ -164,8 +143,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Convert buffer to base64 for storage
       const imageData = req.file.buffer.toString('base64');
       
-      // Analyze palm lines
-      const analysisResult = analyzePalmLines(req.file.buffer);
+      // Get cultural context from request
+      const culturalContext = (req.body.culturalContext as CulturalContext) || 'eastern';
+      const autoDetected = req.body.autoDetected === 'true';
+      
+      // Analyze palm lines with cultural context
+      const analysisResult = analyzePalmLines(req.file.buffer, culturalContext);
+      analysisResult.autoDetected = autoDetected;
       
       // Save to storage
       const palmReading = await storage.savePalmReading({

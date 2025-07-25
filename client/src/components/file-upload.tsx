@@ -8,15 +8,17 @@ import { Progress } from "@/components/ui/progress";
 import { Upload, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import type { PalmAnalysisResult } from "@shared/schema";
+import type { PalmAnalysisResult, CulturalContext } from "@shared/schema";
 
 interface FileUploadProps {
   onAnalysisComplete: (result: PalmAnalysisResult) => void;
   onAnalysisStart: () => void;
   isAnalyzing: boolean;
+  culturalContext: CulturalContext;
+  autoDetected: boolean;
 }
 
-export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing }: FileUploadProps) {
+export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, culturalContext, autoDetected }: FileUploadProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [progress, setProgress] = useState(0);
@@ -26,6 +28,8 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing }:
       const formData = new FormData();
       formData.append('palmImage', file);
       formData.append('sessionId', `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+      formData.append('culturalContext', culturalContext);
+      formData.append('autoDetected', autoDetected.toString());
       
       const response = await apiRequest('POST', '/api/analyze-palm', formData);
       return await response.json();

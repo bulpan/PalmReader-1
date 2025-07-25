@@ -3,19 +3,31 @@ import { useTranslation } from "react-i18next";
 import { FileUpload } from "@/components/file-upload";
 import { PalmAnalysisResult } from "@/components/palm-analysis-result";
 import { AdSidebar } from "@/components/ad-sidebar";
+import { CulturalContextSelector } from "@/components/cultural-context-selector";
 import { LanguageSelector } from "@/components/language-selector";
+import { detectCulturalContext } from "@/lib/cultural-detection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/components/theme-provider";
 import { Moon, Sun, Heart, Brain, Activity, Star, Eye, Lightbulb, Shield, Sparkles } from "lucide-react";
-import type { PalmAnalysisResult as PalmAnalysisType } from "@shared/schema";
+import type { PalmAnalysisResult as PalmAnalysisType, CulturalContext } from "@shared/schema";
 
 export default function Home() {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const [analysisResult, setAnalysisResult] = useState<PalmAnalysisType | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  
+  // Cultural context state
+  const [culturalContext, setCulturalContext] = useState<CulturalContext>(() => {
+    const detected = detectCulturalContext();
+    return detected.context;
+  });
+  const [autoDetected, setAutoDetected] = useState(() => {
+    const detected = detectCulturalContext();
+    return detected.autoDetected;
+  });
 
   const handleAnalysisComplete = (result: PalmAnalysisType) => {
     setAnalysisResult(result);
@@ -43,6 +55,11 @@ export default function Home() {
 
   const scrollToUpload = () => {
     document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleContextChange = (newContext: CulturalContext) => {
+    setCulturalContext(newContext);
+    setAutoDetected(false); // Mark as manually changed
   };
 
   return (
@@ -145,10 +162,19 @@ export default function Home() {
           </div>
 
           <div className="max-w-4xl mx-auto">
+            {/* Cultural Context Selector */}
+            <CulturalContextSelector
+              currentContext={culturalContext}
+              autoDetected={autoDetected}
+              onContextChange={handleContextChange}
+            />
+
             <FileUpload 
               onAnalysisComplete={handleAnalysisComplete}
               onAnalysisStart={handleAnalysisStart}
               isAnalyzing={isAnalyzing}
+              culturalContext={culturalContext}
+              autoDetected={autoDetected}
             />
 
             {/* Google Ad Banner - Top */}

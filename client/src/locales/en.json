@@ -72,5 +72,11 @@
   "faq": "FAQ",
   "privacy": "Privacy Policy",
   "terms": "Terms of Service",
-  "footerDescription": "Ancient wisdom meets modern technology to read your future from your palm. Get both fun and insight at the same time."
+  "footerDescription": "Ancient wisdom meets modern technology to read your future from your palm. Get both fun and insight at the same time.",
+  "culturalContext": "Cultural Analysis",
+  "westernTradition": "Western Palmistry",
+  "easternTradition": "Eastern Palmistry", 
+  "indianTradition": "Indian Palmistry",
+  "autoDetected": "Auto-detected",
+  "changeContext": "Change Context"
 }
