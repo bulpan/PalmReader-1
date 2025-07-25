@@ -114,16 +114,16 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing }:
               : 'border-dashed border-mystic-300 dark:border-mystic-600'
           } ${isAnalyzing ? 'pointer-events-none opacity-50' : 'hover:border-mystic-purple dark:hover:border-mystic-gold'}`}
         >
-          <CardContent className="p-12 text-center">
+          <CardContent className="p-6 sm:p-12 text-center">
             <input {...getInputProps()} />
             
             {isAnalyzing ? (
-              <div className="space-y-4">
-                <Loader2 className="w-16 h-16 mx-auto text-mystic-purple dark:text-mystic-gold animate-spin" />
-                <h3 className="text-xl font-semibold text-mystic-700 dark:text-mystic-200">
+              <div className="space-y-3">
+                <Loader2 className="w-12 sm:w-16 h-12 sm:h-16 mx-auto text-mystic-purple dark:text-mystic-gold animate-spin" />
+                <h3 className="text-lg sm:text-xl font-semibold text-mystic-700 dark:text-mystic-200">
                   {t('analyzing')}
                 </h3>
-                <p className="text-mystic-600 dark:text-mystic-400">
+                <p className="text-sm sm:text-base text-mystic-600 dark:text-mystic-400">
                   {t('analyzingDesc')}
                 </p>
                 {progress > 0 && (
@@ -133,16 +133,16 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing }:
                 )}
               </div>
             ) : (
-              <div className="space-y-4">
-                <Upload className="w-16 h-16 mx-auto text-mystic-400 dark:text-mystic-500" />
-                <h3 className="text-xl font-semibold text-mystic-700 dark:text-mystic-200">
+              <div className="space-y-3">
+                <Upload className="w-12 sm:w-16 h-12 sm:h-16 mx-auto text-mystic-400 dark:text-mystic-500" />
+                <h3 className="text-lg sm:text-xl font-semibold text-mystic-700 dark:text-mystic-200">
                   {isDragActive ? t('dropHere') : t('uploadTitle')}
                 </h3>
-                <p className="text-mystic-500 dark:text-mystic-400 mb-4">
+                <p className="text-sm sm:text-base text-mystic-500 dark:text-mystic-400 mb-3">
                   {t('uploadFormats')}
                 </p>
                 <Button 
-                  className="px-6 py-3 bg-mystic-purple hover:bg-purple-700 text-white"
+                  className="px-4 sm:px-6 py-2 sm:py-3 bg-mystic-purple hover:bg-purple-700 text-white text-sm sm:text-base"
                   disabled={isAnalyzing}
                 >
                   {t('selectFile')}
