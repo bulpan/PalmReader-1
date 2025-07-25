@@ -336,10 +336,7 @@ export default function Home() {
 
             {/* Google Ad Banner - After Palm Lines */}
             <div className="mt-8">
-              <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
-                <div className="text-xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
-                <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">728 x 90 (Leaderboard)</div>
-              </div>
+              <MiddleBannerAd />
             </div>
           </div>
         </div>

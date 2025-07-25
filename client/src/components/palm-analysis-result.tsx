@@ -6,6 +6,7 @@ import { Heart, Briefcase, Activity, User, Share, Download, Twitter, RotateCcw, 
 import { getCulturalDisplayName } from "@/lib/cultural-detection";
 import { UserFeedback } from "@/components/user-feedback";
 import { useMobileDetection, shareContent } from "@/hooks/use-mobile-detection";
+import { MiddleBannerAd } from "@/components/google-adsense";
 import type { PalmAnalysisResult } from "@shared/schema";
 
 interface PalmAnalysisResultProps {
@@ -199,10 +200,7 @@ ${t('confidence')}: ${result.confidence}%
 
         {/* Google Ad Banner - Middle */}
         <div className="my-8">
-          <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
-            <div className="text-xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
-            <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">300 x 250 (Medium Rectangle)</div>
-          </div>
+          <MiddleBannerAd />
         </div>
 
         {/* Actions */}
@@ -258,10 +256,7 @@ ${t('confidence')}: ${result.confidence}%
 
         {/* Google Ad Banner - Bottom */}
         <div className="mt-8">
-          <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
-            <div className="text-xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
-            <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">728 x 90 (Leaderboard)</div>
-          </div>
+          <MiddleBannerAd />
         </div>
       </div>
     </div>
