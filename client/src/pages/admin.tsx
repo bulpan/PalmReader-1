@@ -5,19 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CheckCircle, XCircle, Clock, Eye } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Eye, LogOut } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import AdminLogin from "@/components/admin-login";
 import type { UserFeedback } from "@shared/schema";
 
 export default function AdminPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedFeedback, setSelectedFeedback] = useState<UserFeedback | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const { data: feedbacks = [], isLoading } = useQuery({
     queryKey: ["/api/admin/feedback"],
     queryFn: () => apiRequest("/api/admin/feedback"),
+    enabled: isAuthenticated, // Only fetch when authenticated
   });
 
   const updateStatusMutation = useMutation({
@@ -31,6 +35,37 @@ export default function AdminPage() {
       });
     },
   });
+
+  const handleLogin = async (password: string) => {
+    setIsLoggingIn(true);
+    try {
+      const response = await apiRequest("/api/admin/login", "POST", { password });
+      if (response.success) {
+        setIsAuthenticated(true);
+        toast({
+          title: "로그인 성공",
+          description: "관리자 페이지에 접근합니다",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "로그인 실패", 
+        description: "잘못된 비밀번호입니다",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setSelectedFeedback(null);
+    toast({
+      title: "로그아웃",
+      description: "관리자 세션이 종료되었습니다",
+    });
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -54,6 +89,11 @@ export default function AdminPage() {
     }
   };
 
+  // Show login screen if not authenticated
+  if (!isAuthenticated) {
+    return <AdminLogin onLogin={handleLogin} isLoading={isLoggingIn} />;
+  }
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -66,7 +106,17 @@ export default function AdminPage() {
     <div className="container mx-auto px-4 py-8">
       <Card>
         <CardHeader>
-          <CardTitle>사용자 피드백 관리</CardTitle>
+          <div className="flex justify-between items-center">
+            <CardTitle>사용자 피드백 관리</CardTitle>
+            <Button 
+              variant="outline" 
+              onClick={handleLogout}
+              data-testid="button-admin-logout"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              로그아웃
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <Table>
