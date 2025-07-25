@@ -116,6 +116,10 @@ export default function Home() {
             </Button>
             <Button 
               variant="outline"
+              onClick={() => {
+                const palmGuideSection = document.getElementById('palm-guide-section');
+                palmGuideSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
               className="px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-mystic-purple font-semibold text-lg rounded-full transition-all duration-300"
             >
               {t('learnMore')}
@@ -192,7 +196,7 @@ export default function Home() {
       </section>
 
       {/* Palm Lines Guide Section */}
-      <section className="py-8 sm:py-12 bg-mystic-100 dark:bg-mystic-800">
+      <section id="palm-guide-section" className="py-8 sm:py-12 bg-mystic-100 dark:bg-mystic-800">
         <div className="container mx-auto px-4">
           <div className="text-center mb-6 sm:mb-12">
             <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-mystic-purple dark:text-mystic-gold mb-3 sm:mb-6">
