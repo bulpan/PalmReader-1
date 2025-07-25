@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 declare global {
   interface Window {
@@ -49,10 +49,13 @@ export function GoogleAd({
   );
 }
 
-// 최하단 고정영역 광고 (사각형, 반응형)
+// 최하단 고정영역 광고 (사각형, 반응형) - 항상 보이므로 바로 로드
 export function BottomFixedAd() {
   return (
-    <div className="w-full min-h-[90px] bg-gray-50 dark:bg-gray-800 rounded-lg p-2">
+    <div 
+      className="w-full min-h-[90px] bg-gray-50 dark:bg-gray-800 rounded-lg p-2"
+      style={{ minWidth: "320px" }}
+    >
       <GoogleAd 
         slot="2007004200"
         className="w-full h-full"
@@ -62,28 +65,115 @@ export function BottomFixedAd() {
   );
 }
 
-// 중간 배너 광고 (수평형, 반응형)
+// 중간 배너 광고 (수평형, 반응형) - Intersection Observer 사용
 export function MiddleBannerAd() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasLoaded) {
+            setIsVisible(true);
+            setHasLoaded(true);
+          }
+        });
+      },
+      {
+        threshold: 0.1, // 10%가 보이면 로드
+        rootMargin: '50px' // 50px 여유를 두고 미리 로드
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, [hasLoaded]);
+
   return (
-    <div className="w-full min-h-[90px] bg-gray-50 dark:bg-gray-800 rounded-lg p-2 my-4">
-      <GoogleAd 
-        slot="8793335020"
-        className="w-full h-full"
-        style={{ display: "block", minHeight: "90px", width: "100%" }}
-      />
+    <div 
+      ref={containerRef}
+      className="w-full min-h-[90px] bg-gray-50 dark:bg-gray-800 rounded-lg p-2 my-4"
+      style={{ minWidth: "320px" }}
+    >
+      {isVisible && (
+        <GoogleAd 
+          slot="8793335020"
+          className="w-full h-full"
+          style={{ display: "block", minHeight: "90px", width: "100%" }}
+        />
+      )}
+      {!isVisible && (
+        <div className="w-full h-[90px] flex items-center justify-center text-gray-400 text-sm">
+          광고 로딩 중...
+        </div>
+      )}
     </div>
   );
 }
 
-// 우측 스카이스크래퍼 광고 (수직형, 반응형)
+// 우측 스카이스크래퍼 광고 (수직형, 반응형) - Intersection Observer 사용
 export function SidebarSkyscraperAd() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasLoaded) {
+            setIsVisible(true);
+            setHasLoaded(true);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '50px'
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, [hasLoaded]);
+
   return (
-    <div className="w-full min-h-[600px] bg-gray-50 dark:bg-gray-800 rounded-lg p-2">
-      <GoogleAd 
-        slot="9858709531"
-        className="w-full h-full"
-        style={{ display: "block", minHeight: "600px", width: "100%" }}
-      />
+    <div 
+      ref={containerRef}
+      className="w-full min-h-[600px] bg-gray-50 dark:bg-gray-800 rounded-lg p-2"
+      style={{ minWidth: "160px" }}
+    >
+      {isVisible && (
+        <GoogleAd 
+          slot="9858709531"
+          className="w-full h-full"
+          style={{ display: "block", minHeight: "600px", width: "100%" }}
+        />
+      )}
+      {!isVisible && (
+        <div className="w-full h-[600px] flex items-center justify-center text-gray-400 text-sm">
+          <div className="text-center">
+            <div>스카이스크래퍼</div>
+            <div>광고 로딩 중...</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
