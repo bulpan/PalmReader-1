@@ -8,6 +8,7 @@ import { MiddleBannerAd } from "@/components/google-adsense";
 import { CulturalContextSelector } from "@/components/cultural-context-selector";
 import { LanguageSelector } from "@/components/language-selector";
 import { UserFeedback } from "@/components/user-feedback";
+import { DebugAdsInfo } from "@/components/debug-ads";
 import { SeoHead } from "@/components/seo-head";
 import { StructuredData } from "@/components/structured-data";
 import { detectCulturalContext } from "@/lib/cultural-detection";
@@ -71,6 +72,7 @@ export default function Home() {
     <div className="bg-gradient-to-b from-mystic-50 to-white dark:from-mystic-900 dark:to-mystic-800 transition-colors duration-300">
       <SeoHead />
       <StructuredData />
+      <DebugAdsInfo />
       {/* Ad Sidebar */}
       <AdSidebar />
       
