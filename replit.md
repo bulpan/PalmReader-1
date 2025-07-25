@@ -1,23 +1,127 @@
-# Palm Mystic - Replit Development Guide
+# Palm Mystic - 최종 프로젝트 요구사항 문서
 
-## Overview
+## 프로젝트 개요
 
-Palm Mystic is a modern web application that provides palm reading services through image analysis. The app allows users to upload photos of their palms and receive detailed mystical interpretations based on traditional palmistry principles. It features a full-stack architecture with a React frontend, Express backend, and PostgreSQL database integration.
+Palm Mystic은 AI 기술을 활용한 손금 분석 서비스로, 사용자가 손바닥 이미지를 업로드하면 전통 손금술을 기반으로 한 상세한 분석 결과를 제공하는 현대적인 웹 애플리케이션입니다. React 프론트엔드, Express 백엔드, PostgreSQL 데이터베이스 통합을 특징으로 하는 풀스택 아키텍처를 구현합니다.
 
-## User Preferences
+## 사용자 선호사항
 
-Preferred communication style: Simple, everyday language.
+선호하는 의사소통 스타일: 간단하고 일상적인 언어 사용.
 
-## Recent Changes (Latest Updates)
+## 핵심 기능 요구사항
 
-### 2025-07-25: Complete Multi-Language Support Implementation
-- **Full Analysis Translation**: Added comprehensive multi-language support for Chinese, Japanese, and Hindi
-- **Cultural Analysis Enhancement**: All cultural contexts (Western, Eastern, Indian) now support all languages
-- **Template Localization**: Created complete template sets for overallTemplates, loveTemplates, careerTemplates
-- **Helper Function Expansion**: Enhanced getPersonalityAnalysis, getHealthAnalysis, getLineDescription, getLineTraits with full language support
-- **Client Translation Files**: Added complete translation files for zh.json, ja.json, hi.json with suggestions section
-- **Server Integration**: Removed hardcoded Korean arrays and fully integrated language parameter passing
-- **Testing Verified**: All languages (en, zh, ja, hi, ko) confirmed working with authentic cultural content
+### 1. 다국어 지원 시스템
+- **지원 언어**: 한국어(기본), 영어, 중국어, 일본어, 힌디어
+- **실시간 언어 전환**: 분석 결과 포함 모든 콘텐츠 즉시 번역
+- **문화권별 분석**: 서양, 동양, 인도 전통 손금술 각각의 언어별 지원
+- **언어 선택기**: 명확한 시각적 구분과 호버 효과
+
+### 2. 문화권별 손금 분석 시스템
+- **서양 수상학**: 점성술, 심리학 기반 해석
+- **동양 수상학**: 음양오행, 주역 기반 해석
+- **인도 수상학**: 베다 점성학, 카르마 기반 해석
+- **자동 감지**: 사용자 지역 기반 문화권 자동 선택
+- **수동 전환**: 사용자가 원하는 문화권 선택 가능
+
+### 3. 손금 분석 엔진
+- **종합 분석**: 전체적인 운세 해석
+- **세부 분석**: 사랑운, 사업운, 건강운, 성격 분석
+- **손금선 분석**: 감정선, 두뇌선, 생명선, 운명선 개별 해석
+- **신뢰도 표시**: 각 분석 결과의 신뢰도 점수 제공
+- **맞춤형 해석**: 문화권과 언어에 따른 개별화된 결과
+
+### 4. 사용자 피드백 및 관리 시스템
+- **피드백 수집**: 사용자 의견 및 개선 요청 수집
+- **관리자 패널**: 피드백 관리 및 상태 업데이트
+- **보안 시스템**: 비밀번호 기반 관리자 인증
+- **이메일 알림**: 피드백 상태 변경 시 자동 이메일 발송
+- **데이터베이스 연동**: 실제 데이터 저장 및 조회
+
+### 5. SEO 최적화 시스템
+- **메타 태그**: 다국어 지원 title, description, keywords
+- **소셜 미디어**: Open Graph, Twitter Cards 지원
+- **구조화된 데이터**: Schema.org 표준 준수
+- **검색엔진 최적화**: sitemap.xml, robots.txt 구성
+- **다국어 SEO**: 각 언어별 최적화된 메타 정보
+
+### 6. 모바일 최적화 및 접근성
+- **반응형 디자인**: 모바일 우선 설계
+- **다크/라이트 모드**: 자동 테마 전환 지원
+- **드래그 앤 드롭**: 직관적인 이미지 업로드
+- **접근성**: ARIA 라벨 및 키보드 네비게이션
+
+## 기술 스택 및 아키텍처
+
+### 프론트엔드
+- **React 18**: TypeScript 기반 모던 프레임워크
+- **Vite**: 빠른 개발 및 빌드 도구
+- **shadcn/ui**: 접근성 우선 UI 컴포넌트
+- **Tailwind CSS**: 유틸리티 우선 스타일링
+- **i18next**: 국제화 및 다국어 지원
+- **TanStack Query**: 서버 상태 관리
+- **Wouter**: 경량 라우팅
+
+### 백엔드
+- **Express.js**: Node.js 웹 프레임워크
+- **TypeScript**: 타입 안전성 보장
+- **Multer**: 파일 업로드 처리
+- **SendGrid**: 이메일 발송 서비스
+- **세션 관리**: Express 세션 기반
+
+### 데이터베이스
+- **PostgreSQL**: Neon 서버리스 연결
+- **Drizzle ORM**: 타입 안전 데이터베이스 조작
+- **자동 마이그레이션**: 스키마 변경 자동 적용
+
+## 보안 및 인증
+
+### 관리자 시스템
+- **비밀번호 인증**: ADMIN_PASSWORD 환경변수 기반
+- **세션 관리**: 안전한 관리자 세션 유지
+- **접근 제어**: robots.txt를 통한 관리자 페이지 차단
+
+### 데이터 보호
+- **환경변수**: 민감한 정보 안전 저장
+- **HTTPS**: 프로덕션 환경 SSL 적용
+- **데이터 검증**: Zod 스키마를 통한 입력 검증
+
+## 배포 및 운영
+
+### 배포 환경
+- **Replit Autoscale**: 자동 확장 배포
+- **환경 설정**: NODE_ENV, DATABASE_URL 자동 구성
+- **정적 파일**: 최적화된 에셋 서빙
+
+### 모니터링
+- **로그 시스템**: 상세한 에러 추적
+- **성능 최적화**: 이미지 압축 및 캐싱
+- **상태 확인**: 데이터베이스 연결 모니터링
+
+## 최종 완성된 기능 목록
+
+✅ **다국어 완전 지원** (5개 언어)
+✅ **문화권별 손금 분석** (서양/동양/인도)
+✅ **실시간 언어 전환**
+✅ **관리자 피드백 시스템**
+✅ **보안 인증 시스템**
+✅ **SEO 최적화 완료**
+✅ **모바일 반응형 디자인**
+✅ **다크/라이트 모드**
+✅ **이미지 업로드 시스템**
+✅ **데이터베이스 연동**
+✅ **이메일 알림 시스템**
+
+## 사용자 경험 플로우
+
+1. **접속**: 다국어 랜딩 페이지 표시
+2. **언어/문화권 선택**: 자동 감지 또는 수동 선택
+3. **이미지 업로드**: 드래그앤드롭으로 손바닥 이미지 업로드
+4. **분석 처리**: AI 기반 손금 분석 수행
+5. **결과 표시**: 선택된 언어와 문화권에 맞는 상세 분석 결과
+6. **피드백**: 사용자 의견 및 개선 요청 수집
+7. **관리**: 관리자가 피드백 관리 및 응답
+
+이 문서는 Palm Mystic 프로젝트의 모든 요구사항과 구현된 기능을 종합한 최종 명세서입니다.
 
 ## System Architecture
 
