@@ -1,0 +1,44 @@
+1. 공통 header에  구글광고pub ID 넣기 
+
+ 	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5791689664896394" crossorigin="anonymous"></script>
+
+2. 실제 광고 넣기
+    * 최하단 고정영역에 광고 넣기
+        * <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5791689664896394"
+        *      crossorigin="anonymous"></script>
+        * <!— [디스플레이,사각형,반응형,최상단 광고] —>
+        * <ins class="adsbygoogle"
+        *      style="display:block"
+        *      data-ad-client="ca-pub-5791689664896394"
+        *      data-ad-slot="2007004200"
+        *      data-ad-format="auto"
+        *      data-full-width-responsive="true"></ins>
+        * <script>
+        *      (adsbygoogle = window.adsbygoogle || []).push({});
+        * </script>
+    * 중간 중간에 배너 영역에 광고 넣기
+        * <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5791689664896394"
+        *      crossorigin="anonymous"></script>
+        * <!— [디스플레이,수평형,반응형,중단 광고] —>
+        * <ins class="adsbygoogle"
+        *      style="display:block"
+        *      data-ad-client="ca-pub-5791689664896394"
+        *      data-ad-slot="8793335020"
+        *      data-ad-format="auto"
+        *      data-full-width-responsive="true"></ins>
+        * <script>
+        *      (adsbygoogle = window.adsbygoogle || []).push({});
+        * </script>
+    * 우측 스카이스크래퍼 영역에 광고 넣기
+        * <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5791689664896394"
+        *      crossorigin="anonymous"></script>
+        * <!— [오른쪽 사이드바 광고, 수직형, 반응형] —>
+        * <ins class="adsbygoogle"
+        *      style="display:block"
+        *      data-ad-client="ca-pub-5791689664896394"
+        *      data-ad-slot="9858709531"
+        *      data-ad-format="auto"
+        *      data-full-width-responsive="true"></ins>
+        * <script>
+        *      (adsbygoogle = window.adsbygoogle || []).push({});
+        * </script>

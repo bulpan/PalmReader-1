@@ -4,6 +4,7 @@ import { FileUpload } from "@/components/file-upload";
 import { PalmAnalysisResult } from "@/components/palm-analysis-result";
 import { AdSidebar } from "@/components/ad-sidebar";
 import { BottomAdBanner } from "@/components/bottom-ad-banner";
+import { MiddleBannerAd } from "@/components/google-adsense";
 import { CulturalContextSelector } from "@/components/cultural-context-selector";
 import { LanguageSelector } from "@/components/language-selector";
 import { UserFeedback } from "@/components/user-feedback";
@@ -185,10 +186,7 @@ export default function Home() {
 
             {/* Google Ad Banner - Top */}
             <div className="mt-8 mb-6">
-              <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
-                <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
-                <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">728 x 90 (Leaderboard)</div>
-              </div>
+              <MiddleBannerAd />
             </div>
 
             {/* Upload Tips */}
@@ -254,10 +252,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto">
             {/* Google Ad Banner - Before Palm Lines */}
             <div className="mb-8">
-              <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
-                <div className="text-xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
-                <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">728 x 90 (Leaderboard)</div>
-              </div>
+              <MiddleBannerAd />
             </div>
 
             {/* Palm Lines Explanations */}
