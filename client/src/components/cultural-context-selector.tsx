@@ -40,44 +40,42 @@ export function CulturalContextSelector({
   ];
 
   return (
-    <Card className="mb-6 bg-white dark:bg-mystic-800 shadow-lg">
-      <CardContent className="p-6">
-        <div className="flex items-center mb-4">
-          <Globe className="w-5 h-5 text-mystic-purple dark:text-mystic-gold mr-2" />
-          <h3 className="font-semibold text-mystic-700 dark:text-mystic-200">
-            {t('culturalContext')}
-          </h3>
-          {autoDetected && (
-            <Badge variant="secondary" className="ml-2 text-xs">
-              <MapPin className="w-3 h-3 mr-1" />
-              {t('autoDetected')}
-            </Badge>
-          )}
+    <Card className="mb-4 bg-white dark:bg-mystic-800 shadow-sm">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center text-sm">
+            <Globe className="w-4 h-4 text-mystic-purple dark:text-mystic-gold mr-2" />
+            <span className="font-medium text-mystic-700 dark:text-mystic-200">
+              {t('culturalContext')}
+            </span>
+            {autoDetected && (
+              <Badge variant="secondary" className="ml-2 text-xs px-1.5 py-0.5">
+                <MapPin className="w-3 h-3 mr-1" />
+                {t('autoDetected')}
+              </Badge>
+            )}
+          </div>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2">
           {contexts.map((context) => (
             <Button
               key={context.id}
               variant={currentContext === context.id ? "default" : "outline"}
               onClick={() => onContextChange(context.id)}
-              className={`p-4 h-auto text-left justify-start ${
+              size="sm"
+              className={`h-auto p-2 text-xs ${
                 currentContext === context.id 
                   ? 'bg-mystic-purple hover:bg-purple-700 text-white' 
                   : 'hover:bg-mystic-50 dark:hover:bg-mystic-700'
               }`}
             >
-              <div>
-                <div className="font-medium text-sm mb-1">{context.name}</div>
-                <div className="text-xs opacity-80 line-clamp-2">{context.description}</div>
+              <div className="text-center">
+                <div className="font-medium leading-tight">{context.name}</div>
               </div>
             </Button>
           ))}
         </div>
-        
-        <p className="text-xs text-mystic-500 dark:text-mystic-400 mt-3">
-          {t('changeContext')}
-        </p>
       </CardContent>
     </Card>
   );

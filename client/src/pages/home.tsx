@@ -158,13 +158,13 @@ export default function Home() {
       </section>
 
       {/* Upload Section */}
-      <section id="upload-section" className="py-12 sm:py-20 bg-gradient-to-b from-mystic-50 to-white dark:from-mystic-800 dark:to-mystic-900">
+      <section id="upload-section" className="py-6 sm:py-8 bg-gradient-to-b from-mystic-50 to-white dark:from-mystic-800 dark:to-mystic-900">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-16">
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-mystic-purple dark:text-mystic-gold mb-4 sm:mb-6">
+          <div className="text-center mb-4 sm:mb-6">
+            <h2 className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-mystic-purple dark:text-mystic-gold mb-2 sm:mb-3">
               {t('uploadTitle')}
             </h2>
-            <p className="text-base sm:text-lg text-mystic-600 dark:text-mystic-300 max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm text-mystic-600 dark:text-mystic-300 max-w-xl mx-auto">
               {t('uploadDescription')}
             </p>
           </div>
@@ -188,44 +188,44 @@ export default function Home() {
 
 
             {/* Upload Tips */}
-            <div className="grid md:grid-cols-3 gap-4 mt-8">
-              <Card className="bg-white dark:bg-mystic-800 shadow-lg">
-                <CardContent className="p-4">
-                  <div className="w-10 h-10 bg-mystic-purple/10 dark:bg-mystic-gold/10 rounded-lg flex items-center justify-center mb-3">
-                    <Sun className="w-5 h-5 text-mystic-purple dark:text-mystic-gold" />
+            <div className="grid grid-cols-3 gap-2 mt-4">
+              <Card className="bg-white dark:bg-mystic-800 shadow-sm">
+                <CardContent className="p-3">
+                  <div className="w-8 h-8 bg-mystic-purple/10 dark:bg-mystic-gold/10 rounded-lg flex items-center justify-center mb-2">
+                    <Sun className="w-4 h-4 text-mystic-purple dark:text-mystic-gold" />
                   </div>
-                  <h4 className="font-semibold text-mystic-700 dark:text-mystic-200 mb-2 text-sm">
+                  <h4 className="font-medium text-mystic-700 dark:text-mystic-200 mb-1 text-xs">
                     {t('goodLighting')}
                   </h4>
-                  <p className="text-mystic-600 dark:text-mystic-400 text-xs">
+                  <p className="text-mystic-600 dark:text-mystic-400 text-xs leading-tight">
                     {t('goodLightingDesc')}
                   </p>
                 </CardContent>
               </Card>
               
-              <Card className="bg-white dark:bg-mystic-800 shadow-lg">
-                <CardContent className="p-4">
-                  <div className="w-10 h-10 bg-mystic-blue/10 dark:bg-mystic-gold/10 rounded-lg flex items-center justify-center mb-3">
-                    <Eye className="w-5 h-5 text-mystic-blue dark:text-mystic-gold" />
+              <Card className="bg-white dark:bg-mystic-800 shadow-sm">
+                <CardContent className="p-3">
+                  <div className="w-8 h-8 bg-mystic-blue/10 dark:bg-mystic-gold/10 rounded-lg flex items-center justify-center mb-2">
+                    <Eye className="w-4 h-4 text-mystic-blue dark:text-mystic-gold" />
                   </div>
-                  <h4 className="font-semibold text-mystic-700 dark:text-mystic-200 mb-2 text-sm">
+                  <h4 className="font-medium text-mystic-700 dark:text-mystic-200 mb-1 text-xs">
                     {t('clearFocus')}
                   </h4>
-                  <p className="text-mystic-600 dark:text-mystic-400 text-xs">
+                  <p className="text-mystic-600 dark:text-mystic-400 text-xs leading-tight">
                     {t('clearFocusDesc')}
                   </p>
                 </CardContent>
               </Card>
               
-              <Card className="bg-white dark:bg-mystic-800 shadow-lg">
-                <CardContent className="p-4">
-                  <div className="w-10 h-10 bg-mystic-gold/10 rounded-lg flex items-center justify-center mb-3">
-                    <Shield className="w-5 h-5 text-mystic-gold" />
+              <Card className="bg-white dark:bg-mystic-800 shadow-sm">
+                <CardContent className="p-3">
+                  <div className="w-8 h-8 bg-mystic-gold/10 rounded-lg flex items-center justify-center mb-2">
+                    <Shield className="w-4 h-4 text-mystic-gold" />
                   </div>
-                  <h4 className="font-semibold text-mystic-700 dark:text-mystic-200 mb-2 text-sm">
+                  <h4 className="font-medium text-mystic-700 dark:text-mystic-200 mb-1 text-xs">
                     {t('flatPosition')}
                   </h4>
-                  <p className="text-mystic-600 dark:text-mystic-400 text-xs">
+                  <p className="text-mystic-600 dark:text-mystic-400 text-xs leading-tight">
                     {t('flatPositionDesc')}
                   </p>
                 </CardContent>
@@ -236,13 +236,13 @@ export default function Home() {
       </section>
 
       {/* Palm Lines Guide Section */}
-      <section id="palm-guide-section" className="py-8 sm:py-12 bg-mystic-100 dark:bg-mystic-800">
+      <section id="palm-guide-section" className="py-6 sm:py-8 bg-mystic-100 dark:bg-mystic-800">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-6 sm:mb-12">
-            <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-mystic-purple dark:text-mystic-gold mb-3 sm:mb-6">
+          <div className="text-center mb-4 sm:mb-6">
+            <h2 className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-mystic-purple dark:text-mystic-gold mb-2 sm:mb-3">
               {t('palmGuideTitle')}
             </h2>
-            <p className="text-sm sm:text-lg text-mystic-600 dark:text-mystic-300 max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm text-mystic-600 dark:text-mystic-300 max-w-xl mx-auto">
               {t('palmGuideDescription')}
             </p>
           </div>
@@ -251,79 +251,75 @@ export default function Home() {
 
 
             {/* Palm Lines Explanations */}
-            <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
-                <Card className="bg-white dark:bg-mystic-900 shadow-lg border-l-4 border-mystic-purple">
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex items-center mb-2">
-                      <Heart className="w-4 sm:w-5 h-4 sm:h-5 text-mystic-purple dark:text-mystic-gold mr-2" />
-                      <h3 className="font-display text-lg sm:text-xl font-bold text-mystic-purple dark:text-mystic-gold">
+            <div className="grid grid-cols-2 gap-2">
+                <Card className="bg-white dark:bg-mystic-900 shadow-sm border-l-2 border-mystic-purple">
+                  <CardContent className="p-3">
+                    <div className="flex items-center mb-1">
+                      <Heart className="w-3 h-3 text-mystic-purple dark:text-mystic-gold mr-1" />
+                      <h3 className="font-display text-sm font-bold text-mystic-purple dark:text-mystic-gold">
                         {t('heartLine')}
                       </h3>
                     </div>
-                    <p className="text-sm sm:text-base text-mystic-600 dark:text-mystic-300 mb-3">
+                    <p className="text-xs text-mystic-600 dark:text-mystic-300 mb-2">
                       {t('heartLineDesc')}
                     </p>
-                    <ul className="text-xs sm:text-sm text-mystic-500 dark:text-mystic-400 space-y-1">
-                      <li>• {t('heartLineTrait1')}</li>
-                      <li>• {t('heartLineTrait2')}</li>
-                      <li>• {t('heartLineTrait3')}</li>
+                    <ul className="text-xs text-mystic-500 dark:text-mystic-400 space-y-0.5">
+                      <li className="text-xs">• {t('heartLineTrait1')}</li>
+                      <li className="text-xs">• {t('heartLineTrait2')}</li>
                     </ul>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-mystic-900 shadow-lg border-l-4 border-mystic-blue">
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex items-center mb-2">
-                      <Brain className="w-4 sm:w-5 h-4 sm:h-5 text-mystic-blue dark:text-mystic-gold mr-2" />
-                      <h3 className="font-display text-lg sm:text-xl font-bold text-mystic-blue dark:text-mystic-gold">
+                <Card className="bg-white dark:bg-mystic-900 shadow-sm border-l-2 border-mystic-blue">
+                  <CardContent className="p-3">
+                    <div className="flex items-center mb-1">
+                      <Brain className="w-3 h-3 text-mystic-blue dark:text-mystic-gold mr-1" />
+                      <h3 className="font-display text-sm font-bold text-mystic-blue dark:text-mystic-gold">
                         {t('headLine')}
                       </h3>
                     </div>
-                    <p className="text-sm sm:text-base text-mystic-600 dark:text-mystic-300 mb-3">
+                    <p className="text-xs text-mystic-600 dark:text-mystic-300 mb-2">
                       {t('headLineDesc')}
                     </p>
-                    <ul className="text-xs sm:text-sm text-mystic-500 dark:text-mystic-400 space-y-1">
-                      <li>• {t('headLineTrait1')}</li>
-                      <li>• {t('headLineTrait2')}</li>
-                      <li>• {t('headLineTrait3')}</li>
+                    <ul className="text-xs text-mystic-500 dark:text-mystic-400 space-y-0.5">
+                      <li className="text-xs">• {t('headLineTrait1')}</li>
+                      <li className="text-xs">• {t('headLineTrait2')}</li>
                     </ul>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-mystic-900 shadow-lg border-l-4 border-mystic-gold">
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex items-center mb-2">
-                      <Activity className="w-4 sm:w-5 h-4 sm:h-5 text-mystic-gold mr-2" />
-                      <h3 className="font-display text-lg sm:text-xl font-bold text-mystic-gold">
+                <Card className="bg-white dark:bg-mystic-900 shadow-sm border-l-2 border-mystic-gold">
+                  <CardContent className="p-3">
+                    <div className="flex items-center mb-1">
+                      <Activity className="w-3 h-3 text-mystic-gold mr-1" />
+                      <h3 className="font-display text-sm font-bold text-mystic-gold">
                         {t('lifeLine')}
                       </h3>
                     </div>
-                    <p className="text-sm sm:text-base text-mystic-600 dark:text-mystic-300 mb-3">
+                    <p className="text-xs text-mystic-600 dark:text-mystic-300 mb-2">
                       {t('lifeLineDesc')}
                     </p>
-                    <ul className="text-xs sm:text-sm text-mystic-500 dark:text-mystic-400 space-y-1">
-                      <li>• {t('lifeLineTrait1')}</li>
-                      <li>• {t('lifeLineTrait2')}</li>
-                      <li>• {t('lifeLineTrait3')}</li>
+                    <ul className="text-xs text-mystic-500 dark:text-mystic-400 space-y-0.5">
+                      <li className="text-xs">• {t('lifeLineTrait1')}</li>
+                      <li className="text-xs">• {t('lifeLineTrait2')}</li>
                     </ul>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-mystic-900 shadow-lg border-l-4 border-green-500">
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex items-center mb-2">
-                      <Star className="w-4 sm:w-5 h-4 sm:h-5 text-green-600 dark:text-mystic-gold mr-2" />
-                      <h3 className="font-display text-lg sm:text-xl font-bold text-green-600 dark:text-mystic-gold">
+                <Card className="bg-white dark:bg-mystic-900 shadow-sm border-l-2 border-green-500">
+                  <CardContent className="p-3">
+                    <div className="flex items-center mb-1">
+                      <Star className="w-3 h-3 text-green-600 dark:text-mystic-gold mr-1" />
+                      <h3 className="font-display text-sm font-bold text-green-600 dark:text-mystic-gold">
                         {t('fateLine')}
                       </h3>
                     </div>
-                    <p className="text-sm sm:text-base text-mystic-600 dark:text-mystic-300 mb-3">
+                    <p className="text-xs text-mystic-600 dark:text-mystic-300 mb-2">
                       {t('fateLineDesc')}
                     </p>
-                    <ul className="text-xs sm:text-sm text-mystic-500 dark:text-mystic-400 space-y-1">
-                      <li>• {t('fateLineTrait1')}</li>
-                      <li>• {t('fateLineTrait2')}</li>
-                      <li>• {t('fateLineTrait3')}</li>
+                    <ul className="text-xs text-mystic-500 dark:text-mystic-400 space-y-0.5">
+                      <li className="text-xs">• {t('fateLineTrait1')}</li>
+                      <li className="text-xs">• {t('fateLineTrait2')}</li>
                     </ul>
                   </CardContent>
                 </Card>

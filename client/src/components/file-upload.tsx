@@ -110,8 +110,8 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
   });
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mystical-border p-1 rounded-2xl mb-8">
+    <div className="max-w-2xl mx-auto">
+      <div className="mystical-border p-1 rounded-xl mb-6">
         <Card 
           {...getRootProps()}
           className={`cursor-pointer transition-colors ${
@@ -120,16 +120,16 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
               : 'border-dashed border-mystic-300 dark:border-mystic-600'
           } ${isAnalyzing ? 'pointer-events-none opacity-50' : 'hover:border-mystic-purple dark:hover:border-mystic-gold'}`}
         >
-          <CardContent className="p-6 sm:p-12 text-center">
+          <CardContent className="p-4 sm:p-6 text-center">
             <input {...getInputProps()} />
             
             {isAnalyzing ? (
-              <div className="space-y-3">
-                <Loader2 className="w-12 sm:w-16 h-12 sm:h-16 mx-auto text-mystic-purple dark:text-mystic-gold animate-spin" />
-                <h3 className="text-lg sm:text-xl font-semibold text-mystic-700 dark:text-mystic-200">
+              <div className="space-y-2">
+                <Loader2 className="w-10 h-10 mx-auto text-mystic-purple dark:text-mystic-gold animate-spin" />
+                <h3 className="text-base font-semibold text-mystic-700 dark:text-mystic-200">
                   {t('analyzing')}
                 </h3>
-                <p className="text-sm sm:text-base text-mystic-600 dark:text-mystic-400">
+                <p className="text-sm text-mystic-600 dark:text-mystic-400">
                   {t('analyzingDesc')}
                 </p>
                 {progress > 0 && (
@@ -139,16 +139,16 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
                 )}
               </div>
             ) : (
-              <div className="space-y-3">
-                <Upload className="w-12 sm:w-16 h-12 sm:h-16 mx-auto text-mystic-400 dark:text-mystic-500" />
-                <h3 className="text-lg sm:text-xl font-semibold text-mystic-700 dark:text-mystic-200">
+              <div className="space-y-2">
+                <Upload className="w-10 h-10 mx-auto text-mystic-400 dark:text-mystic-500" />
+                <h3 className="text-base font-semibold text-mystic-700 dark:text-mystic-200">
                   {isDragActive ? t('dropHere') : t('uploadTitle')}
                 </h3>
-                <p className="text-sm sm:text-base text-mystic-500 dark:text-mystic-400 mb-3">
+                <p className="text-sm text-mystic-500 dark:text-mystic-400 mb-2">
                   {t('uploadFormats')}
                 </p>
                 <Button 
-                  className="px-4 sm:px-6 py-2 sm:py-3 bg-mystic-purple hover:bg-purple-700 text-white text-sm sm:text-base"
+                  className="px-4 py-2 bg-mystic-purple hover:bg-purple-700 text-white text-sm"
                   disabled={isAnalyzing}
                 >
                   {t('selectFile')}
