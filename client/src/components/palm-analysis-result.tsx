@@ -94,14 +94,6 @@ ${t('confidence')}: ${result.confidence}%
         </Badge>
       </div>
 
-      {/* Google Ad Banner - Before Results */}
-      <div className="mb-8">
-        <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center max-w-4xl mx-auto">
-          <div className="text-xl font-bold text-gray-600 dark:text-gray-400">Google Ad</div>
-          <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">728 x 90 (Leaderboard)</div>
-        </div>
-      </div>
-
       <div className="max-w-4xl mx-auto">
         {/* Overall Reading */}
         <Card className="bg-gradient-to-r from-mystic-purple to-mystic-blue p-8 text-white mb-8 shadow-2xl">
