@@ -63,19 +63,131 @@ export function getCulturalAnalysis(context: CulturalContext, language: string =
   // Get base cultural content
   const culturalContent = CULTURAL_ANALYSIS[context];
   
-  // If requesting Korean for Eastern/Indian or English for Western, return as-is
+  // If requesting the original language of the cultural content, return as-is
   if ((context === 'western' && language === 'en') || 
       ((context === 'eastern' || context === 'indian') && language === 'ko')) {
     return culturalContent;
   }
   
-  // Otherwise translate to target language
+  // Otherwise translate to target language while preserving cultural methodology
   return translateCulturalContent(culturalContent, context, language);
 }
 
 function translateCulturalContent(content: CulturalData, context: CulturalContext, language: string): CulturalData {
-  // For now, return base content - full translation system can be expanded later
-  // This maintains the cultural methodology while allowing language flexibility
+  // Translate Western palmistry to other languages
+  if (context === 'western') {
+    if (language === 'ko') {
+      return {
+        overallTemplates: [
+          "서양 수상학 전통에 뿌리를 둔 당신의 손금은 매혹적인 성격 특성을 드러냅니다. 두드러진 감정선은 당신이 깊은 진정성과 감정적 지능으로 사랑에 접근함을 나타내며, 인생 여정에서 깊고 의미 있는 관계를 형성하는 타고난 능력을 시사합니다. 손가락 길이와 손바닥 비율은 강한 의사소통 기술과 리더십 잠재력을 가진 자연스럽게 표현력이 풍부한 성격을 드러냅니다.",
+          "당신의 손금은 의미 있는 관계와 직업적 성공을 위해 운명지어진 사람의 고전적인 징후를 보여줍니다. 당신의 선들의 명확성과 깊이는 평생에 걸쳐 당신에게 좋은 도움이 될 강한 생명력과 자연적 회복력을 나타냅니다. 서양 수상학은 당신의 손 형성을 균형 잡힌 감정적, 지적 능력을 나타내는 것으로 해석하며, 특히 창의적 노력과 대인 관계에서 강점을 보입니다."
+        ],
+        loveTemplates: [
+          "당신의 감정선은 사랑 문제에서 타고나게 진실하고 헌신적임을 나타냅니다. 열정과 지혜 모두로 관계에 접근하여 연인과 깊고 지속적인 감정적 유대를 형성할 능력이 있습니다.",
+          "당신의 감정선 형성은 열정과 지혜 모두로 관계에 접근하여 시간의 시험을 견디는 의미 있는 연결을 만든다는 것을 시사합니다. 서양 수상학은 이것을 감정적 성숙과 진정한 파트너십의 능력의 징조로 봅니다."
+        ],
+        careerTemplates: [
+          "당신의 운명선은 직업적 성공에 대한 우수한 잠재력을 가진 강한 목표 지향적 성격을 나타냅니다. 특히 분석적 사고와 창의적 문제 해결이 모두 필요한 분야에서 경력 발전에 잘 도움이 될 타고난 리더십 능력을 가지고 있습니다.",
+          "당신의 손의 특성은 창의성과 분석적 사고 모두를 필요로 하는 분야에서 뛰어날 것임을 시사합니다. 서양 수상학은 당신의 손금 형성을 의사소통, 리더십, 또는 창의적 표현과 관련된 전문 직업에 적합한 것으로 봅니다."
+        ]
+      };
+    }
+    
+    if (language === 'zh') {
+      return {
+        overallTemplates: [
+          "根据西方手相学传统，您的手掌揭示了迷人的个性特征。突出的心线表明您以深刻的真诚和情感智慧对待爱情，暗示您天生有能力在人生旅程中建立深刻有意义的关系。您的手指长度和手掌比例揭示了具有强大沟通技巧和领导潜力的天生富有表现力的个性。",
+          "您的手掌显示了注定拥有有意义关系和职业成功的人的经典征象。您线条的清晰度和深度表明强大的生命力和自然韧性，将在您的一生中很好地为您服务。西方手相学将您的手部形成解释为表明平衡的情感和智力能力，在创意努力和人际关系方面具有特殊优势。"
+        ],
+        loveTemplates: [
+          "您的心线表明您在爱情事务中天生真诚和忠诚。您有能力与浪漫伴侣建立深刻、持久的情感纽带，以激情和智慧处理关系。",
+          "您心线的形成表明您以激情和智慧处理关系，创造经得起时间考验的有意义联系。西方手相学将此视为情感成熟和真正伙伴关系能力的标志。"
+        ],
+        careerTemplates: [
+          "您的命运线表明强烈的目标导向性格，具有优秀的职业成功潜力。您拥有天生的领导能力，将在职业发展中很好地为您服务，特别是在需要分析思维和创造性问题解决的领域。",
+          "您手部的特征表明您将在需要创造力和分析思维的领域中脱颖而出。西方手相学认为您的手掌形成适合涉及交流、领导或创意表达的专业职业。"
+        ]
+      };
+    }
+    
+    if (language === 'ja') {
+      return {
+        overallTemplates: [
+          "西洋手相学の伝統に根ざして、あなたの手のひらは魅力的な性格特性を明らかにしています。目立つ感情線は、あなたが深い誠実さと感情的知性で愛に取り組むことを示し、人生の旅路で深く意味のある関係を築く生来の能力を示唆しています。あなたの指の長さと手のひらの比率は、強いコミュニケーションスキルとリーダーシップの潜在能力を持つ、自然に表現力豊かな性格を明らかにしています。",
+          "あなたの手のひらは、有意義な関係と職業的成功に運命づけられた人の古典的な兆候を示しています。あなたの線の明確さと深さは、人生を通じてあなたによく役立つ強い生命力と自然な回復力を示しています。西洋手相学は、あなたの手の形成を、創造的努力と対人関係において特に強みを持つ、バランスの取れた感情的・知的能力を示すものと解釈しています。"
+        ],
+        loveTemplates: [
+          "あなたの感情線は、愛の問題において生来誠実で献身的であることを示しています。あなたは恋愛パートナーと深く持続的な感情的結びつきを築く能力があり、情熱と知恵の両方で関係にアプローチします。",
+          "あなたの感情線の形成は、情熱と知恵の両方で関係にアプローチし、時の試練に耐える意味のあるつながりを作ることを示唆しています。西洋手相学はこれを感情的成熟と真のパートナーシップの能力の兆候として見ています。"
+        ],
+        careerTemplates: [
+          "あなたの運命線は、職業的成功への優れた潜在能力を持つ強い目標指向の性格を示しています。あなたには、特に分析的思考と創造的問題解決の両方を必要とする分野で、キャリアの発展によく役立つ生来のリーダーシップ能力があります。",
+          "あなたの手の特徴は、創造性と分析的思考の両方を必要とする分野で優秀になることを示唆しています。西洋手相学は、あなたの手のひらの形成を、コミュニケーション、リーダーシップ、または創造的表現に関わる専門職に適していると見なしています。"
+        ]
+      };
+    }
+    
+    if (language === 'hi') {
+      return {
+        overallTemplates: [
+          "पश्चिमी हस्त विद्या की परंपराओं में निहित, आपकी हथेली आकर्षक व्यक्तित्व विशेषताओं को प्रकट करती है। प्रमुख हृदय रेखा दर्शाती है कि आप गहरी ईमानदारी और भावनात्मक बुद्धिमत्ता के साथ प्रेम से निपटते हैं, जो आपके जीवन यात्रा में गहरे, अर्थपूर्ण रिश्ते बनाने की जन्मजात क्षमता का सुझाव देती है। आपकी उंगली की लंबाई और हथेली के अनुपात मजबूत संचार कौशल और नेतृत्व क्षमता के साथ प्राकृतिक रूप से अभिव्यंजक व्यक्तित्व को प्रकट करते हैं।",
+          "आपकी हथेली उन लोगों के क्लासिक संकेत दिखाती है जो सार्थक रिश्तों और व्यावसायिक सफलता के लिए नियत हैं। आपकी रेखाओं की स्पष्टता और गहराई मजबूत जीवन शक्ति और प्राकृतिक लचीलेपन को दर्शाती है जो आपके पूरे जीवन में आपकी अच्छी सेवा करेगी। पश्चिमी हस्त विद्या आपके हाथ के गठन को संतुलित भावनात्मक और बौद्धिक क्षमताओं के संकेतक के रूप में व्याख्या करती है, विशेष रूप से रचनात्मक प्रयासों और पारस्परिक संबंधों में शक्ति के साथ।"
+        ],
+        loveTemplates: [
+          "आपकी हृदय रेखा दर्शाती है कि आप प्रेम के मामलों में स्वाभाविक रूप से ईमानदार और समर्पित हैं। आपमें अपने रोमांटिक साझीदारों के साथ गहरे, स्थायी भावनात्मक बंधन बनाने की क्षमता है, जुनून और बुद्धि दोनों के साथ रिश्तों से निपटते हैं।",
+          "आपकी हृदय रेखा का गठन सुझाता है कि आप जुनून और बुद्धि दोनों के साथ रिश्तों से निपटते हैं, समय की कसौटी पर खरे उतरने वाले सार्थक संबंध बनाते हैं। पश्चिमी हस्त विद्या इसे भावनात्मक परिपक्वता और सच्ची साझेदारी की क्षमता के संकेत के रूप में देखती है।"
+        ],
+        careerTemplates: [
+          "आपकी भाग्य रेखा व्यावसायिक सफलता की उत्कृष्ट क्षमता के साथ मजबूत लक्ष्य-उन्मुख प्रकृति को दर्शाती है। आपमें प्राकृतिक नेतृत्व क्षमताएं हैं जो आपके करियर की प्रगति में अच्छी सेवा करेंगी, विशेष रूप से उन क्षेत्रों में जिनमें विश्लेषणात्मक सोच और रचनात्मक समस्या समाधान दोनों की आवश्यकता होती है।",
+          "आपके हाथ की विशेषताएं सुझाती हैं कि आप उन क्षेत्रों में उत्कृष्ट होंगे जिनमें रचनात्मकता और विश्लेषणात्मक सोच दोनों की आवश्यकता होती है। पश्चिमी हस्त विद्या आपके हथेली के गठन को संचार, नेतृत्व, या रचनात्मक अभिव्यक्ति से जुड़े पेशेवर करियर के लिए उपयुक्त मानती है।"
+        ]
+      };
+    }
+  }
+  
+  // For Eastern and Indian contexts, translate from Korean to other languages
+  if (context === 'eastern' || context === 'indian') {
+    if (language === 'en') {
+      // Return English translation of Eastern/Indian methodology
+      if (context === 'eastern') {
+        return {
+          overallTemplates: [
+            "According to Eastern palmistry traditions rooted in Yin-Yang and Five Elements principles, your palm reveals extraordinary potential for harmonious and successful life. The flow of your emotional line demonstrates innate intuition and creativity. Traditional Eastern palm reading indicates artistic talents and spiritual awareness. Your emotional line extending toward the Jupiter mount shows genuine, pure love and the ability to form meaningful, deep relationships throughout life. Your finger length and palm proportions indicate strong Wood element energy, filled with growth and development potential.",
+            "Interpreting through the Eight Trigrams of I-Ching, your palm shows harmony between Qian (☰) and Kun (☷), representing balanced character. Your deeply carved life line indicates innate healthy constitution and strong life force. Eastern palmistry calls this 'Dragon Vein Formation,' considered highly auspicious. Your palm's color and luster show vigorous vital energy with excellent circulation. The three clear lines near your wrist (bracelet lines) symbolize longevity and prosperity, showing trustworthy virtue that earns others' respect."
+          ],
+          loveTemplates: [
+            "Your emotional line starting below the index finger indicates a leading, proactive approach to romance with genuine sincerity toward partners.",
+            "Your emotional line's length and depth show serious, devoted approach to love. An ideal partnership awaits you."
+          ],
+          careerTemplates: [
+            "Your fate line crossing straight through palm center shows innate leadership and unwavering willpower - highly auspicious signs. Eastern classic 'Physiognomy Methods' classifies this fate line as 'Emperor Formation,' characteristic of those who harbor great ambitions and achieve them.",
+            "Strong goal-oriented nature with excellent professional success potential. Your natural leadership abilities will serve you well in career advancement."
+          ]
+        };
+      } else {
+        // Indian context in English
+        return {
+          overallTemplates: [
+            "According to ancient Vedic palmistry traditions and karmic principles, your palm reveals a soul blessed with profound spiritual evolution and material success potential. Your hand's configuration shows balanced karma from past lives, indicating spiritual growth and worldly achievement. Traditional Indian palm reading sees divine blessings in your line formations.",
+            "Vedic astrology principles reflected in your palm show harmonious planetary influences, particularly strong Jupiter and Venus energies. Your palm structure indicates incarnation with purposes of spiritual teaching and material prosperity."
+          ],
+          loveTemplates: [
+            "Vedic palmistry indicates karmic soul connections in your romantic relationships. Your heart line formation shows capacity for divine love and spiritual partnership that transcends ordinary relationships.",
+            "Ancient Indian texts describe your heart line as 'Prema Rekha' - line of pure love, indicating relationships based on dharma and spiritual evolution together."
+          ],
+          careerTemplates: [
+            "Vedic career analysis shows strong Rajasic (dynamic) and Sattvic (pure) energies for leadership in dharmic professions. Your fate line indicates life purpose connected to teaching, healing, or spiritual guidance.",
+            "Your palm structure shows karmic calling toward professions that balance material success with spiritual service, following the path of 'Karma Yoga' - action without attachment."
+          ]
+        };
+      }
+    }
+    
+    // For other languages (zh, ja, hi), provide basic translations
+    // This can be expanded with full translations later
+    return content;
+  }
+  
   return content;
 }
 
