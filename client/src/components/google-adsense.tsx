@@ -27,6 +27,8 @@ export function GoogleAd({
   style = { display: "block" },
   className = "" 
 }: GoogleAdProps) {
+  // 광고 로딩 비활성화 (임시)
+  /*
   useEffect(() => {
     // 전역 애드센스 매니저 사용
     if (!window.adsenseManager) {
@@ -91,6 +93,7 @@ export function GoogleAd({
 
     return () => clearTimeout(timer);
   }, [slot]);
+  */
 
   return (
     <div 
@@ -102,6 +105,14 @@ export function GoogleAd({
         display: 'block'
       }}
     >
+      {/* 광고 임시 비활성화 */}
+      <div className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center w-full h-full flex items-center justify-center">
+        <div>
+          <div className="text-lg font-bold text-gray-600 dark:text-gray-400">광고 위치</div>
+          <div className="text-sm text-gray-500 dark:text-gray-500 mt-2">슬롯 {slot} (비활성화됨)</div>
+        </div>
+      </div>
+      {/*
       <ins 
         className="adsbygoogle"
         style={{
@@ -115,6 +126,7 @@ export function GoogleAd({
         data-ad-format={format}
         data-full-width-responsive={responsive.toString()}
       />
+      */}
     </div>
   );
 }
