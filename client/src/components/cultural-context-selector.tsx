@@ -22,19 +22,19 @@ export function CulturalContextSelector({
     {
       id: 'western' as CulturalContext,
       name: t('westernTradition'),
-      description: '서양 수상학 - 점성술, 심리학 기반 해석',
+      description: t('westernDescription'),
       color: 'bg-blue-100 dark:bg-blue-900/30 border-blue-300'
     },
     {
       id: 'eastern' as CulturalContext,
       name: t('easternTradition'),
-      description: '동양 수상학 - 음양오행, 주역 기반 해석',
+      description: t('easternDescription'),
       color: 'bg-red-100 dark:bg-red-900/30 border-red-300'
     },
     {
       id: 'indian' as CulturalContext,
       name: t('indianTradition'),
-      description: 'भारतीय हस्तरेखा - 베다 점성술, 카르마 기반 해석',
+      description: t('indianDescription'),
       color: 'bg-orange-100 dark:bg-orange-900/30 border-orange-300'
     }
   ];
@@ -76,7 +76,7 @@ export function CulturalContextSelector({
         </div>
         
         <p className="text-xs text-mystic-500 dark:text-mystic-400 mt-3">
-          {t('changeContext')} - 각 문화권별로 다른 해석 방식을 적용합니다
+          {t('changeContext')}
         </p>
       </CardContent>
     </Card>

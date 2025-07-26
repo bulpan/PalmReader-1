@@ -90,8 +90,11 @@
   "westernTradition": "Western Palmistry",
   "easternTradition": "Eastern Palmistry",
   "indianTradition": "Indian Palmistry",
+  "westernDescription": "Modern interpretation based on astrology and psychology",
+  "easternDescription": "Traditional interpretation based on Yin-Yang and I-Ching",
+  "indianDescription": "Spiritual interpretation based on Vedic astrology and karma",
   "autoDetected": "Auto-detected",
-  "changeContext": "Change Context",
+  "changeContext": "Experience different interpretation methods from each culture",
   "seoTitle": "AI Palm Reading - Palm Mystic | Free Palmistry Fortune Telling",
   "seoDescription": "Get accurate palm reading analysis with AI technology. Free palmistry, love fortune, wealth fortune, and health fortune instantly. Fusion of traditional Eastern and Western palmistry with modern AI.",
   "seoKeywords": "palm reading, palmistry, AI palm reading, free fortune telling, horoscope, tarot, divination, palm analysis, fortune reading"
