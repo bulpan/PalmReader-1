@@ -122,6 +122,24 @@ img {
     background-size: 300% 300%;
     animation: shimmer 3s ease-in-out infinite;
   }
+
+  /* Select component text visibility improvements */
+  [data-radix-select-trigger] {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  [data-radix-select-value] {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* Language selector specific styling */
+  .language-selector [data-radix-select-trigger] {
+    color: hsl(var(--mystic-700)) !important;
+  }
+
+  .dark .language-selector [data-radix-select-trigger] {
+    color: hsl(var(--mystic-200)) !important;
+  }
 }
 
 @layer utilities {
