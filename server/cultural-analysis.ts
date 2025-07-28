@@ -11,15 +11,27 @@ const CULTURAL_ANALYSIS: Record<CulturalContext, CulturalData> = {
   western: {
     overallTemplates: [
       "Your palmistry reveals fascinating personality traits rooted in Western palmistry traditions. The prominent heart line indicates you approach love with deep sincerity and emotional intelligence, suggesting an innate ability to form meaningful, deep relationships throughout your life journey. Your finger length and palm proportions reveal a naturally expressive personality with strong communication skills and leadership potential.",
-      "Your palm shows the classic signs of a person destined for meaningful relationships and professional success. The clarity and depth of your lines indicate strong vital energy and natural resilience that will serve you well throughout life. Western palmistry interprets your hand formation as indicative of balanced emotional and intellectual capabilities, with particular strength in creative endeavors and interpersonal relationships."
+      "Your palm shows the classic signs of a person destined for meaningful relationships and professional success. The clarity and depth of your lines indicate strong vital energy and natural resilience that will serve you well throughout life. Western palmistry interprets your hand formation as indicative of balanced emotional and intellectual capabilities, with particular strength in creative endeavors and interpersonal relationships.",
+      "The unique pattern of your palm lines reveals a highly intuitive individual with exceptional potential for personal growth. Your hand shape and line formations suggest someone who combines practical wisdom with deep emotional intelligence, making you naturally suited for roles that require both analytical skills and human understanding.",
+      "Your palmistry analysis indicates a dynamic personality with strong artistic tendencies and natural charisma. The distinctive characteristics of your palm suggest you possess the rare ability to inspire others while maintaining your own authentic vision and creative independence.",
+      "Western palmistry tradition identifies your hand formation as belonging to someone with exceptional adaptability and resilience. Your palm lines reveal a person who thrives in challenging situations and has the natural ability to find innovative solutions to complex problems.",
+      "Your palm reveals the characteristics of a natural healer and communicator. The formation of your lines suggests you have an innate understanding of human nature and the ability to bring out the best in others through your compassionate and insightful approach to relationships."
     ],
     loveTemplates: [
       "Your heart line indicates you are naturally sincere and devoted in matters of love. You have the ability to form deep, lasting emotional bonds with your romantic partners, approaching relationships with both passion and wisdom.",
-      "The formation of your heart line suggests you approach relationships with both passion and wisdom, creating meaningful connections that stand the test of time. Western palmistry sees this as a sign of emotional maturity and capacity for true partnership."
+      "The formation of your heart line suggests you approach relationships with both passion and wisdom, creating meaningful connections that stand the test of time. Western palmistry sees this as a sign of emotional maturity and capacity for true partnership.",
+      "Your romantic nature is characterized by deep loyalty and emotional authenticity. You seek meaningful connections and have the patience to nurture relationships into something truly special and lasting.",
+      "In love, you demonstrate remarkable emotional intelligence and empathy. Your heart line reveals someone who understands the importance of communication and emotional support in building strong partnerships.",
+      "Your approach to love is both idealistic and practical. You believe in true love while maintaining realistic expectations, which gives you the best chance of finding and maintaining meaningful relationships.",
+      "Your heart line suggests you are a romantic who values emotional depth over superficial attractions. You have the ability to create profound emotional connections that transcend ordinary relationships."
     ],
     careerTemplates: [
       "Your fate line indicates strong goal-oriented nature with excellent potential for professional success. You have natural leadership abilities that will serve you well in your career advancement, particularly in fields requiring both analytical thinking and creative problem-solving.",
-      "The characteristics of your hand suggest you will excel in fields that require both creativity and analytical thinking. Western palmistry identifies your palm formation as suited for professional careers involving communication, leadership, or creative expression."
+      "The characteristics of your hand suggest you will excel in fields that require both creativity and analytical thinking. Western palmistry identifies your palm formation as suited for professional careers involving communication, leadership, or creative expression.",
+      "Your career path shows strong potential for entrepreneurial success. Your palm lines reveal someone with the vision to identify opportunities and the determination to pursue them until you achieve your goals.",
+      "You possess natural teaching abilities and would excel in roles where you can share knowledge and inspire others. Your hand formation suggests success in education, training, counseling, or mentoring roles.",
+      "Your professional strengths lie in your ability to innovate and think outside conventional boundaries. You are well-suited for careers in technology, research, design, or any field that values creative problem-solving.",
+      "Your palm indicates strong potential for success in collaborative environments. You have the rare ability to balance individual excellence with team cooperation, making you valuable in leadership and project management roles."
     ]
   },
   eastern: {
@@ -31,12 +43,20 @@ const CULTURAL_ANALYSIS: Record<CulturalContext, CulturalData> = {
     loveTemplates: [
       "검지 아래에서 시작하는 감정선이 연애에서 주도적이고 적극적인 성향을 나타내며, 상대방에게 진심으로 대하는 성품을 보여줍니다.",
       "감정선의 길이와 깊이로 보아 사랑에 대해 진지하고 헌신적으로 접근하는 타입입니다. 이상적인 인연을 만날 운이 있습니다.",
-      "로맨틱한 성향이 강하고 감정 표현이 풍부합니다. 상대방에 대한 깊은 배려심으로 행복한 관계를 맺을 가능성이 높습니다."
+      "로맨틱한 성향이 강하고 감정 표현이 풍부합니다. 상대방에 대한 깊은 배려심으로 행복한 관계를 맺을 가능성이 높습니다.",
+      "감정선이 새끼손가락 쪽으로부터 시작되어 물(水) 기운이 강하여, 사랑에 있어 감성적이고 직관적인 접근을 하는 성향입니다. 상대방의 마음을 잘 헤아리는 능력이 뛰어납니다.",
+      "감정선의 분기가 여러 갈래로 나뉘어 있어 다양한 형태의 사랑을 경험할 운명입니다. 각각의 인연에서 깊은 배움과 성장을 얻을 것입니다.",
+      "금성구가 발달하여 애정이 풍부하고 가정적인 성향이 강합니다. 전통적 가치를 중시하며 안정적인 관계를 추구하는 타입입니다.",
+      "감정선이 곧고 깊어 일편단심의 상으로, 한번 마음을 정하면 변하지 않는 진실한 사랑을 하는 성품입니다."
     ],
     careerTemplates: [
       "손바닥을 가로질러 곧게 뻗은 운명선이 타고난 리더십과 흔들리지 않는 의지력을 보여주는 매우 길한 징조입니다. 동양의 고전 '신상전편'에서는 이런 운명선을 '제왕지상'이라 하여 큰 뜻을 품고 이를 성취하는 사람의 특징으로 봅니다.",
       "강한 목표 지향적 성격으로 직업적 성공에 대한 뛰어난 잠재력을 가지고 있습니다. 타고난 리더십 능력이 경력 발전에 큰 도움이 될 것입니다.",
-      "세밀한 분석적 사고로 전문직에 적합한 성향을 가지고 있습니다. 지속적인 학습을 통해 더욱 발전할 수 있습니다."
+      "세밀한 분석적 사고로 전문직에 적합한 성향을 가지고 있습니다. 지속적인 학습을 통해 더욱 발전할 수 있습니다.",
+      "태양선이 뚜렷하여 예술적 재능과 창의력이 뛰어납니다. 문화예술 분야나 미디어 관련 직업에서 큰 성취를 이룰 가능성이 높습니다.",
+      "수성구가 발달하여 상업적 감각과 소통 능력이 뛰어납니다. 사업이나 영업, 교육 분야에서 두각을 나타낼 것입니다.",
+      "목성구의 발달이 좋아 지도력과 판단력이 우수합니다. 관리직이나 공직, 교육계에서 성공할 운명을 가지고 있습니다.",
+      "화성평원이 넓고 탄탄하여 실행력과 추진력이 강합니다. 새로운 분야를 개척하거나 혁신적인 사업을 성공시킬 능력이 있습니다."
     ]
   },
   indian: {
@@ -48,12 +68,19 @@ const CULTURAL_ANALYSIS: Record<CulturalContext, CulturalData> = {
     loveTemplates: [
       "베다 수상학에 따르면 당신의 연애 관계에서 카르마적 영혼 연결을 나타냅니다. 심장선 형태가 평범한 관계를 초월하는 신성한 사랑과 영적 동반자적 역량을 보여줍니다.",
       "고대 인도 경전에서는 당신의 심장선을 '프레마 레카' - 순수한 사랑의 선이라 하여, 다르마와 함께하는 영적 진화에 기반한 관계를 나타냅니다.",
-      "당신의 손금은 조화로운 관계를 위한 파르바티와 시바의 축복을 보여줍니다. 전통 인도 수상학에서는 영적 각성에 도움이 되는 사랑의 잠재력을 봅니다."
+      "당신의 손금은 조화로운 관계를 위한 파르바티와 시바의 축복을 보여줍니다. 전통 인도 수상학에서는 영적 각성에 도움이 되는 사랑의 잠재력을 봅니다.",
+      "라다와 크리슈나의 신성한 사랑을 상징하는 손금 형태로, 물질적 사랑을 넘어선 영적 결합의 가능성을 보여줍니다. 전생의 인연이 이생에서 재현될 운명입니다.",
+      "금성 손가락 아래의 선들이 강한 바크티(헌신) 에너지를 나타내어, 사랑을 통해 영적 성장을 이루는 특별한 능력을 가지고 있습니다.",
+      "아유르베다 체질 분석에 따르면 카파 도샤가 강하여 안정적이고 지속적인 관계를 추구하는 성향이 있으며, 가정과 가족에 대한 깊은 애정을 보여줍니다."
     ],
     careerTemplates: [
       "베다 직업 분석에 따르면 다르마적 직업에서의 리더십을 위한 강한 라자식(역동적) 및 사트빅(순수한) 에너지를 보여줍니다. 운명선이 가르침, 치유, 또는 영적 안내와 연결된 인생 목적을 나타냅니다.",
       "고대 인도 수상학에서는 당신의 손 형태가 집단선을 위한 직업 - 의학, 교육, 영적 상담, 또는 의식을 향상시키는 예술 - 에 적합하다고 봅니다.",
-      "손바닥 구조가 물질적 성공과 영적 봉사를 균형 잡는 직업으로의 카르마적 소명을 보여주며, '카르마 요가' - 집착 없는 행동 - 의 길을 따릅니다."
+      "손바닥 구조가 물질적 성공과 영적 봉사를 균형 잡는 직업으로의 카르마적 소명을 보여주며, '카르마 요가' - 집착 없는 행동 - 의 길을 따릅니다.",
+      "브라만 바르나의 특성을 보여주는 손 형태로, 지식과 지혜를 전달하는 직업에서 큰 성취를 이룰 운명입니다. 학자, 연구자, 영적 지도자의 길이 열려있습니다.",
+      "크샤트리야 바르나의 용기와 보호 본능을 나타내는 손금으로, 사회 정의와 약자 보호에 관련된 직업에서 성공할 가능성이 높습니다.",
+      "바이샤 바르나의 상업적 감각과 풍요를 창조하는 능력을 보여주어, 사업이나 무역, 금융 분야에서 큰 성과를 거둘 수 있습니다.",
+      "목샤(해탈)를 향한 영적 여정과 동시에 세속적 성공을 이루는 균형잡힌 삶의 경로가 운명선에 새겨져 있습니다."
     ]
   }
 };
