@@ -1,0 +1,18 @@
+# Cloudflare Pages 빌드 설정
+# Build command: npm run build
+# Build output directory: dist
+# Root directory: client
+
+# 환경변수 설정 (Cloudflare Dashboard에서 설정)
+# VITE_API_URL = "https://palm-mystic-api.your-subdomain.workers.dev"
+
+# 리다이렉트 규칙 (SPA 라우팅 지원)
+[[redirects]]
+from = "/admin"
+to = "/admin.html"
+status = 200
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200

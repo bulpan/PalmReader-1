@@ -1,0 +1,24 @@
+{
+  "name": "palm-mystic-workers",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "workers/api.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "^4.0.0",
+    "@hono/cors": "^1.0.0",
+    "drizzle-orm": "^0.39.1",
+    "@neondatabase/serverless": "^0.10.4",
+    "nanoid": "^5.1.5",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
