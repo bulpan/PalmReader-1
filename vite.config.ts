@@ -36,4 +36,6 @@ export default defineConfig({
   },
   // 정적 사이트용 설정
   base: './',
+  // _redirects 파일 복사
+  publicDir: path.resolve(import.meta.dirname, "client", "public"),
 });
