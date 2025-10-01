@@ -5,7 +5,6 @@ import path from "path";
 export default defineConfig({
   plugins: [
     react(),
-    // Replit 플러그인 제거 - 정적 사이트용
   ],
   resolve: {
     alias: {
@@ -16,9 +15,8 @@ export default defineConfig({
   },
   root: path.resolve(import.meta.dirname, "client"),
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    outDir: path.resolve(import.meta.dirname, "dist"),
     emptyOutDir: true,
-    // 정적 사이트 최적화
     rollupOptions: {
       output: {
         manualChunks: {
@@ -34,8 +32,6 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
-  // 정적 사이트용 설정
   base: './',
-  // _redirects 파일 복사
   publicDir: path.resolve(import.meta.dirname, "client", "public"),
 });
