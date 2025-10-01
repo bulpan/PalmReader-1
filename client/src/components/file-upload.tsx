@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import i18n from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -8,8 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Upload, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
-import type { PalmAnalysisResult, CulturalContext } from "@shared/schema";
+import { analyzePalmLines, type PalmAnalysisResult, type CulturalContext } from "@/lib/palm-analysis-client";
 
 interface FileUploadProps {
   onAnalysisComplete: (result: PalmAnalysisResult) => void;
@@ -24,39 +22,29 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
   const { toast } = useToast();
   const [progress, setProgress] = useState(0);
 
-  const analyzePalmMutation = useMutation({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('palmImage', file);
-      formData.append('sessionId', `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
-      formData.append('culturalContext', culturalContext);
-      formData.append('autoDetected', autoDetected.toString());
-      formData.append('language', i18n.language);
+  // 클라이언트 사이드 분석 함수
+  const analyzePalmImage = async (file: File) => {
+    try {
+      // 파일을 ArrayBuffer로 읽기
+      const arrayBuffer = await file.arrayBuffer();
       
-      const response = await apiRequest('POST', '/api/analyze-palm', formData);
-      return await response.json();
-    },
-    onSuccess: (data) => {
-      onAnalysisComplete(data.analysis);
-      toast({
-        title: t('analysisComplete'),
-        description: t('analysisCompleteDesc'),
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: t('analysisError'),
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
+      // 클라이언트 사이드에서 손금 분석 실행
+      const analysisResult = analyzePalmLines(arrayBuffer, culturalContext, i18n.language);
+      
+      return {
+        sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        analysis: analysisResult
+      };
+    } catch (error) {
+      throw new Error('이미지 분석 중 오류가 발생했습니다.');
+    }
+  };
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
 
-    // Validate file type
+    // 파일 유효성 검사
     if (!file.type.startsWith('image/')) {
       toast({
         title: t('invalidFileType'),
@@ -66,7 +54,7 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
       return;
     }
 
-    // Validate file size (10MB limit)
+    // 파일 크기 검사 (10MB 제한)
     if (file.size > 10 * 1024 * 1024) {
       toast({
         title: t('fileTooLarge'),
@@ -76,88 +64,113 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
       return;
     }
 
-    // Clear previous results immediately when starting new analysis
     onAnalysisStart();
-    
-    // Simulate progress
     setProgress(0);
-    const progressInterval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 90) {
-          clearInterval(progressInterval);
-          return 90;
-        }
-        return prev + 10;
-      });
-    }, 300);
 
-    analyzePalmMutation.mutate(file, {
-      onSettled: () => {
-        clearInterval(progressInterval);
-        setProgress(100);
-        setTimeout(() => setProgress(0), 1000);
-      }
-    });
-  }, [analyzePalmMutation, onAnalysisStart, toast, t]);
+    try {
+      // 진행률 시뮬레이션
+      const progressInterval = setInterval(() => {
+        setProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return 90;
+          }
+          return prev + 10;
+        });
+      }, 200);
+
+      // 클라이언트 사이드 분석 실행
+      const result = await analyzePalmImage(file);
+      
+      clearInterval(progressInterval);
+      setProgress(100);
+      
+      // 결과 전달
+      onAnalysisComplete(result.analysis);
+      
+      toast({
+        title: t('analysisComplete'),
+        description: t('analysisCompleteDesc'),
+      });
+    } catch (error) {
+      setProgress(0);
+      toast({
+        title: t('analysisError'),
+        description: error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.',
+        variant: "destructive",
+      });
+    }
+  }, [culturalContext, onAnalysisComplete, onAnalysisStart, t, toast]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.webp']
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp', '.webp']
     },
     multiple: false,
     disabled: isAnalyzing
   });
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="mystical-border p-1 rounded-xl mb-6">
-        <Card 
+    <Card className="w-full max-w-2xl mx-auto">
+      <CardContent className="p-6">
+        <div
           {...getRootProps()}
-          className={`cursor-pointer transition-colors ${
-            isDragActive 
-              ? 'border-mystic-purple dark:border-mystic-gold bg-mystic-50 dark:bg-mystic-700' 
-              : 'border-dashed border-mystic-300 dark:border-mystic-600'
-          } ${isAnalyzing ? 'pointer-events-none opacity-50' : 'hover:border-mystic-purple dark:hover:border-mystic-gold'}`}
+          className={`
+            border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-300
+            ${isDragActive 
+              ? 'border-mystic-500 bg-mystic-50 dark:bg-mystic-900' 
+              : 'border-mystic-300 hover:border-mystic-400 hover:bg-mystic-50/50 dark:hover:bg-mystic-900/50'
+            }
+            ${isAnalyzing ? 'pointer-events-none opacity-50' : ''}
+          `}
         >
-          <CardContent className="p-4 sm:p-6 text-center">
-            <input {...getInputProps()} />
-            
-            {isAnalyzing ? (
+          <input {...getInputProps()} />
+          
+          {isAnalyzing ? (
+            <div className="space-y-4">
+              <Loader2 className="h-12 w-12 text-mystic-500 animate-spin mx-auto" />
               <div className="space-y-2">
-                <Loader2 className="w-10 h-10 mx-auto text-mystic-purple dark:text-mystic-gold animate-spin" />
-                <h3 className="text-base font-semibold text-mystic-700 dark:text-mystic-200">
+                <h3 className="text-lg font-semibold text-mystic-700 dark:text-mystic-300">
                   {t('analyzing')}
                 </h3>
                 <p className="text-sm text-mystic-600 dark:text-mystic-400">
                   {t('analyzingDesc')}
                 </p>
-                {progress > 0 && (
-                  <div className="max-w-xs mx-auto">
-                    <Progress value={progress} className="w-full" />
-                  </div>
-                )}
+                <Progress value={progress} className="w-full max-w-xs mx-auto" />
+                <p className="text-xs text-mystic-500 dark:text-mystic-500">
+                  {progress}%
+                </p>
               </div>
-            ) : (
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <Upload className="h-12 w-12 text-mystic-500 mx-auto" />
               <div className="space-y-2">
-                <Upload className="w-10 h-10 mx-auto text-mystic-400 dark:text-mystic-500" />
-                <h3 className="text-base font-semibold text-mystic-700 dark:text-mystic-200">
-                  {isDragActive ? t('dropHere') : t('uploadTitle')}
+                <h3 className="text-lg font-semibold text-mystic-700 dark:text-mystic-300">
+                  {isDragActive ? t('dropFile') : t('uploadPalmImage')}
                 </h3>
-                <p className="text-sm text-mystic-500 dark:text-mystic-400 mb-2">
-                  {t('uploadFormats')}
+                <p className="text-sm text-mystic-600 dark:text-mystic-400">
+                  {t('uploadDesc')}
                 </p>
                 <Button 
-                  className="px-4 py-2 bg-mystic-purple hover:bg-purple-700 text-white text-sm"
+                  variant="outline" 
+                  className="mt-4"
                   disabled={isAnalyzing}
                 >
                   {t('selectFile')}
                 </Button>
               </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+            </div>
+          )}
+        </div>
+        
+        {/* 파일 요구사항 */}
+        <div className="mt-4 text-xs text-mystic-500 dark:text-mystic-500 text-center">
+          <p>{t('fileRequirements')}</p>
+          <p>{t('supportedFormats')}</p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

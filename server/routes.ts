@@ -1,10 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import multer from "multer";
-import { storage } from "./storage";
-import { insertPalmReadingSchema, insertUserFeedbackSchema, type PalmAnalysisResult, type CulturalContext, type InsertUserFeedback } from "@shared/schema";
+// import { storage } from "./storage"; // DB 저장 기능 제거
+import { type PalmAnalysisResult, type CulturalContext } from "@shared/schema";
 import { getCulturalAnalysis, getHealthAnalysis, getPersonalityAnalysis, getLineDescription, getLineTraits } from "./cultural-analysis.js";
-import { sendEmail } from "./sendgrid";
+// import { sendEmail } from "./sendgrid"; // 이메일 기능 제거
 import { z } from "zod";
 
 // Configure multer for file uploads
@@ -137,17 +137,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const analysisResult = analyzePalmLines(req.file.buffer, culturalContext, language);
       analysisResult.autoDetected = autoDetected;
       
-      // Save to storage
-      const palmReading = await storage.savePalmReading({
-        sessionId,
-        imageData,
-        analysisResult,
-      });
+      // DB 저장 제거 - 결과만 반환
+      // const palmReading = await storage.savePalmReading({
+      //   sessionId,
+      //   imageData,
+      //   analysisResult,
+      // });
 
       res.json({
         sessionId,
-        analysis: analysisResult,
-        readingId: palmReading.id
+        analysis: analysisResult
       });
     } catch (error) {
       console.error('Palm analysis error:', error);
@@ -155,115 +154,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get previous analysis result
+  // Get previous analysis result (메모리 기반으로 변경)
   app.get("/api/palm-reading/:sessionId", async (req, res) => {
     try {
       const { sessionId } = req.params;
-      const reading = await storage.getPalmReadingBySessionId(sessionId);
       
-      if (!reading) {
-        return res.status(404).json({ message: "해당 세션의 분석 결과를 찾을 수 없습니다." });
-      }
-
-      res.json({
-        sessionId: reading.sessionId,
-        analysis: reading.analysisResult,
-        createdAt: reading.createdAt
-      });
+      // DB 조회 제거 - 세션 기반으로 간단히 처리
+      // const reading = await storage.getPalmReadingBySessionId(sessionId);
+      
+      // 임시로 에러 반환 (실제로는 세션 관리 필요)
+      res.status(404).json({ message: "분석 결과는 저장되지 않습니다. 새로 분석해주세요." });
     } catch (error) {
       console.error('Get palm reading error:', error);
       res.status(500).json({ message: "분석 결과 조회 중 오류가 발생했습니다." });
     }
   });
 
-  // User feedback routes
-  app.post('/api/feedback', async (req, res) => {
-    try {
-      const validatedData = insertUserFeedbackSchema.parse(req.body);
-      const result = await storage.createUserFeedback(validatedData);
-      
-      // Send email notification
-      await sendEmail({
-        to: "andipark2015@gmail.com",
-        from: "noreply@palmmystic.com",
-        subject: "새로운 피드백이 도착했습니다",
-        html: `
-          <h2>새로운 피드백</h2>
-          <p><strong>이메일:</strong> ${result.email}</p>
-          <p><strong>요청사항:</strong> ${result.request}</p>
-          <p><strong>제출시간:</strong> ${new Date().toLocaleString('ko-KR')}</p>
-        `
-      });
-      
-      res.json(result);
-    } catch (error) {
-      console.error('Error creating feedback:', error);
-      res.status(400).json({ error: 'Invalid feedback data' });
-    }
-  });
+  // 피드백 및 관리자 기능 비활성화
+  // app.post('/api/feedback', async (req, res) => {
+  //   // 피드백 기능 비활성화
+  // });
 
-  // Admin login route
-  app.post('/api/admin/login', async (req, res) => {
-    try {
-      const { password } = req.body;
-      
-      // Simple password check - in production, use environment variable
-      const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-      
-      if (password === adminPassword) {
-        res.json({ success: true });
-      } else {
-        res.status(401).json({ error: 'Invalid password' });
-      }
-    } catch (error) {
-      console.error('Error during admin login:', error);
-      res.status(500).json({ error: 'Login failed' });
-    }
-  });
+  // app.post('/api/admin/login', async (req, res) => {
+  //   // 관리자 로그인 기능 비활성화
+  // });
 
-  // Admin feedback routes
-  app.get('/api/admin/feedback', async (req, res) => {
-    try {
-      const feedbacks = await storage.getAllUserFeedback();
-      res.json(feedbacks);
-    } catch (error) {
-      console.error('Error fetching feedback:', error);
-      res.status(500).json({ error: 'Failed to fetch feedback' });
-    }
-  });
+  // app.get('/api/admin/feedback', async (req, res) => {
+  //   // 관리자 피드백 조회 기능 비활성화
+  // });
 
-  app.patch('/api/admin/feedback/:id', async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const { status } = req.body;
-      
-      if (!['검토', '적용', '거절'].includes(status)) {
-        return res.status(400).json({ error: 'Invalid status' });
-      }
-
-      const feedback = await storage.updateUserFeedbackStatus(id, status);
-      
-      // Send email if status is "적용"
-      if (status === '적용' && feedback) {
-        const emailSent = await sendEmail({
-          to: feedback.email,
-          from: 'andipark2015@gmail.com',
-          subject: '당신의 요청사항이 반영되었습니다',
-          text: feedback.request,
-          html: `<p>${feedback.request.replace(/\n/g, '<br>')}</p>`
-        });
-        
-        if (!emailSent) {
-          console.error('Failed to send email notification');
-        }
-      }
-      
-      res.json(feedback);
-    } catch (error) {
-      console.error('Error updating feedback status:', error);
-      res.status(500).json({ error: 'Failed to update feedback status' });
-    }
-  });
+  // app.patch('/api/admin/feedback/:id', async (req, res) => {
+  //   // 관리자 피드백 업데이트 기능 비활성화
+  // });
 
   const httpServer = createServer(app);
   return httpServer;

@@ -1,23 +1,24 @@
-import { users, palmReadings, userFeedback, type User, type InsertUser, type PalmReading, type InsertPalmReading, type UserFeedback, type InsertUserFeedback } from "@shared/schema";
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
-import { eq, desc } from "drizzle-orm";
+// 데이터베이스 연결 제거 - 메모리 스토리지만 사용
+// import { users, palmReadings, userFeedback, type User, type InsertUser, type PalmReading, type InsertPalmReading, type UserFeedback, type InsertUserFeedback } from "@shared/schema";
+// import { drizzle } from "drizzle-orm/neon-http";
+// import { neon } from "@neondatabase/serverless";
+// import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  savePalmReading(reading: InsertPalmReading): Promise<PalmReading>;
-  getPalmReadingBySessionId(sessionId: string): Promise<PalmReading | undefined>;
-  createUserFeedback(feedback: InsertUserFeedback): Promise<UserFeedback>;
-  getAllUserFeedback(): Promise<UserFeedback[]>;
-  updateUserFeedbackStatus(id: number, status: string): Promise<UserFeedback | undefined>;
+  getUser(id: number): Promise<any>;
+  getUserByUsername(username: string): Promise<any>;
+  createUser(user: any): Promise<any>;
+  savePalmReading(reading: any): Promise<any>;
+  getPalmReadingBySessionId(sessionId: string): Promise<any>;
+  createUserFeedback(feedback: any): Promise<any>;
+  getAllUserFeedback(): Promise<any[]>;
+  updateUserFeedbackStatus(id: number, status: string): Promise<any>;
 }
 
 export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private palmReadings: Map<number, PalmReading>;
-  private userFeedbacks: Map<number, UserFeedback>;
+  private users: Map<number, any>;
+  private palmReadings: Map<number, any>;
+  private userFeedbacks: Map<number, any>;
   private currentUserId: number;
   private currentReadingId: number;
   private currentFeedbackId: number;
@@ -31,26 +32,26 @@ export class MemStorage implements IStorage {
     this.currentFeedbackId = 1;
   }
 
-  async getUser(id: number): Promise<User | undefined> {
+  async getUser(id: number): Promise<any> {
     return this.users.get(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+  async getUserByUsername(username: string): Promise<any> {
     return Array.from(this.users.values()).find(
       (user) => user.username === username,
     );
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
+  async createUser(insertUser: any): Promise<any> {
     const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
+    const user = { ...insertUser, id };
     this.users.set(id, user);
     return user;
   }
 
-  async savePalmReading(insertReading: InsertPalmReading): Promise<PalmReading> {
+  async savePalmReading(insertReading: any): Promise<any> {
     const id = this.currentReadingId++;
-    const reading: PalmReading = {
+    const reading = {
       ...insertReading,
       id,
       createdAt: new Date(),
@@ -59,15 +60,15 @@ export class MemStorage implements IStorage {
     return reading;
   }
 
-  async getPalmReadingBySessionId(sessionId: string): Promise<PalmReading | undefined> {
+  async getPalmReadingBySessionId(sessionId: string): Promise<any> {
     return Array.from(this.palmReadings.values()).find(
       (reading) => reading.sessionId === sessionId,
     );
   }
 
-  async createUserFeedback(insertFeedback: InsertUserFeedback): Promise<UserFeedback> {
+  async createUserFeedback(insertFeedback: any): Promise<any> {
     const id = this.currentFeedbackId++;
-    const feedback: UserFeedback = {
+    const feedback = {
       ...insertFeedback,
       id,
       status: "검토",
@@ -78,13 +79,13 @@ export class MemStorage implements IStorage {
     return feedback;
   }
 
-  async getAllUserFeedback(): Promise<UserFeedback[]> {
+  async getAllUserFeedback(): Promise<any[]> {
     return Array.from(this.userFeedbacks.values()).sort((a, b) => 
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }
 
-  async updateUserFeedbackStatus(id: number, status: string): Promise<UserFeedback | undefined> {
+  async updateUserFeedbackStatus(id: number, status: string): Promise<any> {
     const feedback = this.userFeedbacks.get(id);
     if (feedback) {
       feedback.status = status;
@@ -95,87 +96,15 @@ export class MemStorage implements IStorage {
   }
 }
 
-export class DatabaseStorage implements IStorage {
-  private db;
+// DB 연결 제거 - 메모리 스토리지만 사용
+// export class DatabaseStorage implements IStorage {
+//   // DB 관련 코드 모두 주석 처리
+// }
 
-  constructor() {
-    if (!process.env.DATABASE_URL) {
-      console.error("DATABASE_URL environment variable is not set. Falling back to memory storage.");
-      throw new Error("DATABASE_URL environment variable is required");
-    }
-    try {
-      const sql = neon(process.env.DATABASE_URL);
-      this.db = drizzle(sql);
-      console.log("Database connection established successfully");
-    } catch (error) {
-      console.error("Failed to connect to database:", error);
-      throw error;
-    }
-  }
-
-  async getUser(id: number): Promise<User | undefined> {
-    const result = await this.db.select().from(users).where(eq(users.id, id)).limit(1);
-    return result[0];
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    const result = await this.db.select().from(users).where(eq(users.username, username)).limit(1);
-    return result[0];
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const result = await this.db.insert(users).values(insertUser).returning();
-    return result[0];
-  }
-
-  async savePalmReading(insertReading: InsertPalmReading): Promise<PalmReading> {
-    const result = await this.db.insert(palmReadings).values(insertReading).returning();
-    return result[0];
-  }
-
-  async getPalmReadingBySessionId(sessionId: string): Promise<PalmReading | undefined> {
-    const result = await this.db.select().from(palmReadings).where(eq(palmReadings.sessionId, sessionId)).limit(1);
-    return result[0];
-  }
-
-  async createUserFeedback(insertFeedback: InsertUserFeedback): Promise<UserFeedback> {
-    const result = await this.db.insert(userFeedback).values(insertFeedback).returning();
-    return result[0];
-  }
-
-  async getAllUserFeedback(): Promise<UserFeedback[]> {
-    const result = await this.db.select().from(userFeedback).orderBy(desc(userFeedback.createdAt));
-    return result;
-  }
-
-  async updateUserFeedbackStatus(id: number, status: string): Promise<UserFeedback | undefined> {
-    const result = await this.db.update(userFeedback)
-      .set({ status, updatedAt: new Date() })
-      .where(eq(userFeedback.id, id))
-      .returning();
-    return result[0];
-  }
-}
-
-// Use database storage in production, memory storage in development for faster iteration
+// 메모리 스토리지만 사용
 let storage: IStorage;
 
-try {
-  const isProduction = process.env.NODE_ENV === "production" || process.env.REPLIT_DEPLOYMENT === '1';
-  const hasDatabase = !!process.env.DATABASE_URL;
-  
-  console.log(`Environment: ${process.env.NODE_ENV || 'not set'}, REPLIT_DEPLOYMENT: ${process.env.REPLIT_DEPLOYMENT || 'not set'}, Database available: ${hasDatabase}`);
-  
-  if (hasDatabase) {
-    console.log("Initializing database storage - database available");
-    storage = new DatabaseStorage();
-  } else {
-    console.log(`Initializing memory storage - no database available`);
-    storage = new MemStorage();
-  }
-} catch (error) {
-  console.error("Failed to initialize database storage, falling back to memory storage:", error);
-  storage = new MemStorage();
-}
+console.log("Initializing memory storage - database functionality disabled");
+storage = new MemStorage();
 
 export { storage };
