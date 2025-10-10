@@ -1,9 +1,0 @@
-# Cloudflare 환경변수 설정 예시
-
-## Workers 환경변수 (Cloudflare Dashboard에서 설정)
-DATABASE_URL=postgresql://username:password@host:port/database
-ADMIN_PASSWORD=your-secure-admin-password
-SENDGRID_API_KEY=your-sendgrid-api-key
-
-## Pages 환경변수 (Cloudflare Dashboard에서 설정)
-VITE_API_URL=https://palm-mystic-api.your-subdomain.workers.dev
