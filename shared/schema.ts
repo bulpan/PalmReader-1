@@ -65,4 +65,11 @@ export interface PalmAnalysisResult {
   confidence: number;
   culturalContext: CulturalContext;
   autoDetected: boolean;
+  insights?: {
+    traitScores: Record<string, number>;
+    dominantTrait: string;
+    energyLevel: number;
+    growthFocus: string;
+    summary: string;
+  };
 }

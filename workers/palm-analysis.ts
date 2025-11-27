@@ -18,6 +18,13 @@ export interface PalmAnalysisResult {
   confidence: number;
   culturalContext: CulturalContext;
   autoDetected: boolean;
+  insights?: {
+    traitScores: Record<string, number>;
+    dominantTrait: string;
+    energyLevel: number;
+    growthFocus: string;
+    summary: string;
+  };
 }
 
 // 손금 분석 함수 (기존 로직을 Workers용으로 복원)

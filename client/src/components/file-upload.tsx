@@ -8,6 +8,15 @@ import { Progress } from "@/components/ui/progress";
 import { Upload, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { analyzePalmLines, type PalmAnalysisResult, type CulturalContext } from "@/lib/palm-analysis-client";
+import { extractPalmFeatures, type PalmFeatures } from "@/lib/palm-preprocess";
+
+let palmMlModulePromise: Promise<typeof import("@/lib/palm-ml")> | null = null;
+async function loadPalmMl() {
+  if (!palmMlModulePromise) {
+    palmMlModulePromise = import("@/lib/palm-ml");
+  }
+  return palmMlModulePromise;
+}
 
 interface FileUploadProps {
   onAnalysisComplete: (result: PalmAnalysisResult) => void;
@@ -21,24 +30,7 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
   const { t } = useTranslation();
   const { toast } = useToast();
   const [progress, setProgress] = useState(0);
-
-  // 클라이언트 사이드 분석 함수
-  const analyzePalmImage = async (file: File) => {
-    try {
-      // 파일을 ArrayBuffer로 읽기
-      const arrayBuffer = await file.arrayBuffer();
-      
-      // 클라이언트 사이드에서 손금 분석 실행
-      const analysisResult = analyzePalmLines(arrayBuffer, culturalContext, i18n.language);
-      
-      return {
-        sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        analysis: analysisResult
-      };
-    } catch (error) {
-      throw new Error('이미지 분석 중 오류가 발생했습니다.');
-    }
-  };
+  const [currentStep, setCurrentStep] = useState<string>("");
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -65,42 +57,62 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
     }
 
     onAnalysisStart();
-    setProgress(0);
+    setProgress(5);
+    setCurrentStep("파일 검증 중...");
 
     try {
-      // 진행률 시뮬레이션
-      const progressInterval = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return 90;
-          }
-          return prev + 10;
-        });
-      }, 200);
+      console.log("[분석] ✅ 파일 검증 완료");
+      
+      console.log("[분석] 이미지 전처리 시작...");
+      setCurrentStep("이미지 전처리 중...");
+      setProgress(10);
+      
+      const { features, buffer } = await extractPalmFeatures(file);
+      console.log(`[분석] ✅ 이미지 전처리 완료 (라인 수: ${features.lineMetrics.totalLines})`);
+      setProgress(50);
 
-      // 클라이언트 사이드 분석 실행
-      const result = await analyzePalmImage(file);
-      
-      clearInterval(progressInterval);
+      setCurrentStep("TensorFlow.js 모듈 로딩 중...");
+      console.log("[분석] TensorFlow.js 동적 로딩 시작");
+      setProgress(60);
+      const { inferPalmInsights } = await loadPalmMl();
+      console.log("[분석] ✅ TensorFlow.js 모듈 로딩 완료");
+
+      setCurrentStep("AI 인사이트 분석 중...");
+      console.log("[분석] AI 인사이트 추론 시작");
+      setProgress(75);
+      const mlInsights = await inferPalmInsights(features);
+      console.log("[분석] ✅ AI 인사이트 추론 완료");
+
+      setCurrentStep("손금 분석 결과 생성 중...");
+      console.log("[분석] 손금 분석 로직 실행");
+      setProgress(90);
+      const analysis = analyzePalmLines(buffer, culturalContext, i18n.language, features, mlInsights);
+      analysis.autoDetected = autoDetected;
+      console.log("[분석] ✅ 손금 분석 완료");
+
       setProgress(100);
-      
-      // 결과 전달
-      onAnalysisComplete(result.analysis);
-      
+      setCurrentStep("완료!");
+      onAnalysisComplete(analysis);
       toast({
         title: t('analysisComplete'),
         description: t('analysisCompleteDesc'),
       });
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류';
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error(`[분석] ❌ 오류 발생: ${errorMessage}`);
+      if (errorStack) {
+        console.error(`[분석] 스택 트레이스: ${errorStack.substring(0, 200)}...`);
+      }
       setProgress(0);
+      setCurrentStep(`오류: ${errorMessage}`);
       toast({
         title: t('analysisError'),
-        description: error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.',
+        description: errorMessage,
         variant: "destructive",
       });
     }
-  }, [culturalContext, onAnalysisComplete, onAnalysisStart, t, toast]);
+  }, [autoDetected, culturalContext, onAnalysisComplete, onAnalysisStart, t, toast]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -135,7 +147,7 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
                   {t('analyzing')}
                 </h3>
                 <p className="text-sm text-mystic-600 dark:text-mystic-400">
-                  {t('analyzingDesc')}
+                  {currentStep || t('analyzingDesc')}
                 </p>
                 <Progress value={progress} className="w-full max-w-xs mx-auto" />
                 <p className="text-xs text-mystic-500 dark:text-mystic-500">
@@ -170,6 +182,7 @@ export function FileUpload({ onAnalysisComplete, onAnalysisStart, isAnalyzing, c
           <p>{t('fileRequirements')}</p>
           <p>{t('supportedFormats')}</p>
         </div>
+
       </CardContent>
     </Card>
   );

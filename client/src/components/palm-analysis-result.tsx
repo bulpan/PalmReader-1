@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Heart, Briefcase, Activity, User, Share, Download, Twitter, RotateCcw, Globe } from "lucide-react";
 import { getCulturalDisplayName } from "@/lib/cultural-detection";
 import { UserFeedback } from "@/components/user-feedback";
@@ -17,6 +18,12 @@ interface PalmAnalysisResultProps {
 export function PalmAnalysisResult({ result, onNewAnalysis }: PalmAnalysisResultProps) {
   const { t } = useTranslation();
   const { isMobile } = useMobileDetection();
+  const traitLabels: Record<string, string> = {
+    intuition: t('traitIntuition', '직관'),
+    vitality: t('traitVitality', '활력'),
+    creativity: t('traitCreativity', '창의성'),
+    stability: t('traitStability', '안정감'),
+  };
 
   const handleShare = () => {
     const title = t('siteName');
@@ -95,6 +102,42 @@ ${t('confidence')}: ${result.confidence}%
       </div>
 
       <div className="max-w-4xl mx-auto">
+
+        {result.insights && (
+          <Card className="bg-white/70 dark:bg-mystic-900/60 shadow-xl border-mystic-100 dark:border-mystic-800 mb-8">
+            <CardContent className="p-6">
+              <h3 className="font-display text-2xl font-bold text-mystic-700 dark:text-mystic-100 mb-2">
+                {t('aiInsightsTitle', 'AI 인사이트')}
+              </h3>
+              <p className="text-mystic-600 dark:text-mystic-300 mb-6">
+                {result.insights.summary}
+              </p>
+              <div className="grid gap-4">
+                {Object.entries(result.insights.traitScores).map(([trait, score]) => (
+                  <div key={trait}>
+                    <div className="flex items-center justify-between mb-1 text-sm">
+                      <span className="font-medium text-mystic-600 dark:text-mystic-300">
+                        {traitLabels[trait] ?? trait}
+                      </span>
+                      <span className="text-mystic-500 dark:text-mystic-400">
+                        {Math.round(score * 100)}%
+                      </span>
+                    </div>
+                    <Progress value={Math.round(score * 100)} />
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <Badge className="w-fit bg-mystic-purple text-white">
+                  {t('energyLevel', '에너지 지수')}: {result.insights.energyLevel}%
+                </Badge>
+                <p className="text-sm text-mystic-600 dark:text-mystic-300">
+                  {result.insights.growthFocus}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
         {/* Overall Reading */}
         <Card className="bg-gradient-to-r from-mystic-purple to-mystic-blue p-8 text-white mb-8 shadow-2xl">
           <CardContent className="p-0">

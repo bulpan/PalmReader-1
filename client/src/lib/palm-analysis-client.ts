@@ -1,4 +1,7 @@
 // 클라이언트 사이드 손금 분석 로직
+import type { PalmFeatures } from "./palm-preprocess";
+import type { MlInsights } from "./palm-ml";
+
 export type CulturalContext = 'western' | 'eastern' | 'indian';
 
 export interface PalmAnalysisResult {
@@ -265,7 +268,13 @@ const LINE_TRAITS = {
 };
 
 // 클라이언트 사이드 손금 분석 함수
-export function analyzePalmLines(imageBuffer: ArrayBuffer, culturalContext: CulturalContext = 'eastern', language: string = 'ko'): PalmAnalysisResult {
+export function analyzePalmLines(
+  imageBuffer: ArrayBuffer,
+  culturalContext: CulturalContext = 'eastern',
+  language: string = 'ko',
+  features?: PalmFeatures,
+  insights?: MlInsights,
+): PalmAnalysisResult {
   // 이미지 데이터를 Uint8Array로 변환
   const imageData = new Uint8Array(imageBuffer);
   const imageSize = imageData.length;
@@ -302,23 +311,54 @@ export function analyzePalmLines(imageBuffer: ArrayBuffer, culturalContext: Cult
   const { overallTemplates, loveTemplates, careerTemplates } = culturalData;
   
   // 이미지 특성에 따른 분석 변수
-  const hasFateLine = advancedRandom(0, 10, 1) > (3 + Math.floor(contrast * 5));
-  const confidence = advancedRandom(82, 97, 2);
+  const featureLines = features?.lineMetrics.totalLines ?? 0;
+  const adjustedContrast = features ? features.contrast / 128 : contrast * 2;
+  const hasFateLine = featureLines > 40
+    ? true
+    : advancedRandom(0, 10, 1) > (3 + Math.floor(adjustedContrast * 5));
+  const baseConfidence = features
+    ? Math.min(98, Math.max(75, 80 + features.lineMetrics.averageLength / 4 + featureLines / 5))
+    : advancedRandom(82, 97, 2);
+  const confidence = insights
+    ? Math.min(99, Math.max(70, baseConfidence + Math.round((insights.energyLevel - 50) / 10)))
+    : baseConfidence;
   const personalityType = Math.floor((combinedHash + Math.floor(complexity * 1000)) % 4);
   
   // 건강 분석
   const healthTemplates = HEALTH_TEMPLATES[culturalContext];
-  const healthAnalysis = advancedChoice(healthTemplates, 1);
+  const healthAnalysis = features
+    ? healthTemplates[
+        features.brightness > 150 ? 0 : features.brightness < 90 ? 2 : 1
+      ] ?? advancedChoice(healthTemplates, 1)
+    : advancedChoice(healthTemplates, 1);
   
   // 성격 분석
   const personalityTemplates = PERSONALITY_TEMPLATES[culturalContext];
-  const personalityAnalysis = advancedChoice(personalityTemplates, personalityType);
+  const personalityIndex = features
+    ? Math.abs(Math.round(features.lineMetrics.dominantAngle / 30))
+    : personalityType;
+  const basePersonalityAnalysis =
+    personalityTemplates[personalityIndex % personalityTemplates.length] ??
+    advancedChoice(personalityTemplates, personalityType);
+  const personalityAnalysis = insights
+    ? `${basePersonalityAnalysis} ${insights.growthFocus}`
+    : basePersonalityAnalysis;
   
   // 손금선 분석
-  const heartLineVariant = advancedRandom(0, 3, 10);
-  const headLineVariant = advancedRandom(0, 3, 20);
-  const lifeLineVariant = advancedRandom(0, 3, 30);
-  const fateLineVariant = hasFateLine ? advancedRandom(0, 2, 40) : advancedRandom(2, 4, 40);
+  const traitOffsets: Record<string, number> = {
+    intuition: 0,
+    vitality: 10,
+    creativity: 20,
+    stability: 30,
+  };
+  const dominantOffset = insights ? traitOffsets[insights.dominantTrait] ?? 0 : 0;
+
+  const heartLineVariant = advancedRandom(0, 3, 10 + dominantOffset);
+  const headLineVariant = advancedRandom(0, 3, 20 + dominantOffset);
+  const lifeLineVariant = advancedRandom(0, 3, 30 + dominantOffset);
+  const fateLineVariant = hasFateLine
+    ? advancedRandom(0, 2, 40 + dominantOffset)
+    : advancedRandom(2, 4, 40 + dominantOffset);
   
   // 특성 인덱스 생성
   const generateTraitIndices = (base: number) => [
@@ -339,10 +379,18 @@ export function analyzePalmLines(imageBuffer: ArrayBuffer, culturalContext: Cult
     return indices.map(i => traits[langKey][i] || traits[langKey][0]);
   };
   
+  const overallBase = advancedChoice(overallTemplates, 0);
+  const loveBase = advancedChoice(loveTemplates, 50 + dominantOffset);
+  const careerBase = advancedChoice(careerTemplates, 100 + dominantOffset);
+
   return {
-    overall: advancedChoice(overallTemplates, 0),
-    loveLife: advancedChoice(loveTemplates, 50),
-    career: advancedChoice(careerTemplates, 100),
+    overall: insights ? `${insights.summary} ${overallBase}` : overallBase,
+    loveLife: insights && insights.dominantTrait === 'intuition'
+      ? loveTemplates[0]
+      : loveBase,
+    career: insights && insights.dominantTrait === 'creativity'
+      ? careerTemplates[2 % careerTemplates.length]
+      : careerBase,
     health: healthAnalysis,
     personality: personalityAnalysis,
     lines: {
@@ -369,6 +417,7 @@ export function analyzePalmLines(imageBuffer: ArrayBuffer, culturalContext: Cult
     },
     confidence,
     culturalContext,
-    autoDetected: true
+    autoDetected: true,
+    insights,
   };
 }
