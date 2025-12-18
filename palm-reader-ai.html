@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 손금 분석 - 실제 선 검출</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .main-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .upload-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .upload-area {
+      border: 3px dashed #667eea;
+      border-radius: 15px;
+      padding: 60px 40px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #f8f9ff;
+    }
+
+    .upload-area:hover {
+      border-color: #764ba2;
+      background: #f0f1ff;
+      transform: translateY(-2px);
+    }
+
+    .upload-area.dragover {
+      border-color: #764ba2;
+      background: #e8e9ff;
+    }
+
+    .upload-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .upload-text {
+      font-size: 1.2rem;
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .preview-section {
+      display: none;
+      margin-top: 30px;
+    }
+
+    .preview-section.active {
+      display: block;
+    }
+
+    .image-container {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    #imagePreview {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    #detectionCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .progress-section {
+      display: none;
+      margin: 30px 0;
+    }
+
+    .progress-section.active {
+      display: block;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    .progress-text {
+      text-align: center;
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .progress-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .progress-step {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      border: 2px solid #e0e0e0;
+      transition: all 0.3s ease;
+      opacity: 0.4;
+    }
+
+    .progress-step.active {
+      border-color: #667eea;
+      background: #f8f9ff;
+      opacity: 1;
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    }
+
+    .progress-step.completed {
+      border-color: #10b981;
+      background: #f0fdf4;
+      opacity: 1;
+    }
+
+    .step-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      filter: grayscale(100%);
+      transition: filter 0.3s ease;
+    }
+
+    .progress-step.active .step-icon,
+    .progress-step.completed .step-icon {
+      filter: grayscale(0%);
+      animation: bounce 0.6s ease;
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 5px;
+      font-size: 1rem;
+    }
+
+    .step-description {
+      font-size: 0.85rem;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .progress-step.completed .step-icon::after {
+      content: " ✓";
+      color: #10b981;
+      font-size: 1.5rem;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .progress-step.active .step-icon {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    /* Ad Section Styles */
+    .ad-section {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .ad-section.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .ad-container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 800px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .ad-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .ad-header h2 {
+      color: #667eea;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .ad-header p {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .ad-content {
+      background: #f8f9ff;
+      border-radius: 15px;
+      padding: 30px;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      border: 2px dashed #667eea;
+    }
+
+    .ad-placeholder {
+      text-align: center;
+      color: #999;
+    }
+
+    .ad-placeholder-icon {
+      font-size: 4rem;
+      margin-bottom: 15px;
+    }
+
+    .ad-timer {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      color: #666;
+    }
+
+    .ad-timer-circle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin: 0 auto 15px;
+      animation: countdown-pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes countdown-pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    .ad-skip-btn {
+      width: 100%;
+      padding: 18px;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      border: none;
+      background: #e0e0e0;
+      color: #999;
+      cursor: not-allowed;
+      transition: all 0.3s ease;
+    }
+
+    .ad-skip-btn.enabled {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      cursor: pointer;
+      animation: glow 1.5s ease-in-out infinite;
+    }
+
+    .ad-skip-btn.enabled:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+      }
+
+      50% {
+        box-shadow: 0 0 30px rgba(102, 126, 234, 0.6);
+      }
+    }
+
+    .results-section {
+      display: none;
+      margin-top: 40px;
+    }
+
+    .results-section.active {
+      display: block;
+    }
+
+    .result-card {
+      background: #f8f9ff;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+      border-left: 5px solid #667eea;
+    }
+
+    .result-card h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    .result-card p {
+      color: #333;
+      line-height: 1.8;
+      font-size: 1.05rem;
+    }
+
+    .line-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .line-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .line-card h4 {
+      color: #667eea;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .line-badge {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .line-badge.heart {
+      background: #ef4444;
+    }
+
+    .line-badge.head {
+      background: #3b82f6;
+    }
+
+    .line-badge.life {
+      background: #10b981;
+    }
+
+    .line-badge.fate {
+      background: #8b5cf6;
+    }
+
+    .line-feature {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .line-feature:last-child {
+      border-bottom: none;
+    }
+
+    .feature-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .feature-value {
+      color: #333;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, .3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Traits Tags */
+    .traits-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .trait-tag {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Detailed Analysis Section */
+    .detailed-analysis {
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 2px dashed #e0e0e0;
+    }
+
+    .analysis-item {
+      margin-bottom: 20px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid #667eea;
+    }
+
+    .analysis-item h4 {
+      color: #667eea;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .analysis-item p {
+      color: #555;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .error-message {
+      background: #fee;
+      color: #c33;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      display: none;
+    }
+
+    .error-message.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .main-card {
+        padding: 25px;
+      }
+
+      .upload-area {
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔮 AI 손금 분석</h1>
+      <p>실제 손금 선을 인식하여 정확한 분석을 제공합니다</p>
+    </div>
+
+    <div class="main-card">
+      <div class="upload-section">
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">손바닥 사진을 선택하거나 드래그하세요</div>
+          <input type="file" id="imageInput" accept="image/*">
+        </div>
+        <button class="btn" id="selectBtn">사진 선택</button>
+      </div>
+
+      <div class="error-message" id="errorMessage"></div>
+
+      <div class="preview-section" id="previewSection">
+        <h3 style="margin-bottom: 15px; color: #667eea;">업로드된 이미지</h3>
+        <div class="image-container">
+          <img id="imagePreview" alt="손바닥 이미지">
+          <canvas id="detectionCanvas"></canvas>
+        </div>
+        <div style="margin-top: 20px; text-align: center;">
+          <button class="btn" id="analyzeBtn">분석 시작</button>
+        </div>
+      </div>
+
+      <div class="progress-section" id="progressSection">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">분석 준비 중...</div>
+
+        <div class="progress-steps">
+          <div class="progress-step" id="step1">
+            <div class="step-icon">🔍</div>
+            <div class="step-title">손 검출</div>
+            <div class="step-description">AI가 손바닥 위치를 찾고 있습니다</div>
+          </div>
+
+          <div class="progress-step" id="step2">
+            <div class="step-icon">✂️</div>
+            <div class="step-title">영역 추출</div>
+            <div class="step-description">손바닥 영역을 정밀하게 분리합니다</div>
+          </div>
+
+          <div class="progress-step" id="step3">
+            <div class="step-icon">📏</div>
+            <div class="step-title">선 검출</div>
+            <div class="step-description">감정선, 두뇌선, 생명선을 찾습니다</div>
+          </div>
+
+          <div class="progress-step" id="step4">
+            <div class="step-icon">🧮</div>
+            <div class="step-title">특징 분석</div>
+            <div class="step-description">선의 길이, 깊이, 곡선을 측정합니다</div>
+          </div>
+
+          <div class="progress-step" id="step5">
+            <div class="step-icon">🔮</div>
+            <div class="step-title">운세 생성</div>
+            <div class="step-description">전통 손금술로 해석합니다</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ad Section -->
+      <div class="ad-section" id="adSection">
+        <div class="ad-container">
+          <div class="ad-header">
+            <h2>🎯 잠깐만요!</h2>
+            <p>분석이 완료되었습니다. 결과를 보기 전에 잠시만 기다려주세요.</p>
+          </div>
+
+          <div class="ad-content">
+            <!-- Google AdSense 또는 다른 광고를 여기에 삽입 -->
+            <div class="ad-placeholder">
+              <div class="ad-placeholder-icon">📢</div>
+              <p style="font-size: 1.1rem; margin-bottom: 10px;">광고 영역</p>
+              <p style="font-size: 0.9rem;">여기에 Google AdSense 또는<br>다른 광고 코드를 삽입하세요</p>
+            </div>
+
+            <!-- Google AdSense 예시 (실제 사용 시 주석 해제) -->
+            <!-- 
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+            -->
+          </div>
+
+          <div class="ad-timer">
+            <div class="ad-timer-circle" id="adTimer">5</div>
+            <p>결과를 확인하려면 <span id="adTimerText">5초</span> 기다려주세요</p>
+          </div>
+
+          <button class="ad-skip-btn" id="adSkipBtn" disabled>
+            결과 확인하기
+          </button>
+        </div>
+      </div>
+
+      <div class="results-section" id="resultsSection">
+        <h2 style="color: #667eea; margin-bottom: 25px; text-align: center;">📊 분석 결과</h2>
+
+        <div class="result-card">
+          <h3>🎯 종합 운세</h3>
+          <p id="overallResult"></p>
+        </div>
+
+        <div class="result-card">
+          <h3>❤️ 애정운</h3>
+          <p id="loveResult"></p>
+        </div>
+
+        <div class="result-card">
+          <h3>💼 직업운</h3>
+          <p id="careerResult"></p>
+        </div>
+
+        <div class="result-card">
+          <h3>🏥 건강운</h3>
+          <p id="healthResult"></p>
+        </div>
+
+        <!-- 성격 특성 태그 -->
+        <div class="result-card">
+          <h3>✨ 발견된 성격 특성</h3>
+          <div class="traits-container" id="traitsContainer"></div>
+        </div>
+
+        <!-- 상세 분석 -->
+        <div class="detailed-analysis">
+          <h3 style="color: #667eea; margin-bottom: 20px;">🔍 상세 손금 분석</h3>
+
+          <div class="analysis-item">
+            <h4>❤️ 감정 분석 (감정선)</h4>
+            <p id="emotionalAnalysis"></p>
+          </div>
+
+          <div class="analysis-item">
+            <h4>🧠 지적 분석 (두뇌선)</h4>
+            <p id="intellectualAnalysis"></p>
+          </div>
+
+          <div class="analysis-item">
+            <h4>💪 신체 분석 (생명선)</h4>
+            <p id="physicalAnalysis"></p>
+          </div>
+
+          <div class="analysis-item">
+            <h4>⭐ 운명 분석 (운명선)</h4>
+            <p id="destinyAnalysis"></p>
+          </div>
+        </div>
+
+        <h3 style="color: #667eea; margin: 40px 0 20px 0;">📏 검출된 손금 선 정보</h3>
+        <div class="line-details" id="lineDetails"></div>
+
+        <div style="text-align: center; margin-top: 40px;">
+          <button class="btn" onclick="location.reload()">다시 분석하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MediaPipe Hands -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+
+  <!-- OpenCV.js -->
+  <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+
+  <!-- Palm Reading Metadata Database -->
+  <script src="palm-metadata.js"></script>
+
+  <!-- Main Application Script -->
+  <script src="palm-detector.js"></script>
+</body>
+
+</html>
